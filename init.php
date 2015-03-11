@@ -31,7 +31,7 @@ Route::set('manager', 'manager(/<controller>(/<action>(/<id>)))', array(
 		'id' => '\d+'
 	))
 	->defaults(array(
-		'controller' => 'tag',
+		'controller' => 'user',
 		'action'     => 'index',
 		'directory' => 'manager'
 	));
