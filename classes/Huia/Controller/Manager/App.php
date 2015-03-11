@@ -262,6 +262,8 @@ class Huia_Controller_Manager_App extends Controller_App {
 				$this->model->{$this->parent.'_id'} = $this->parent_id;
 			}
 
+			$this->model->save();
+			
 			// add has many
 			foreach ($this->has_many as $name => $values)
 			{
@@ -280,7 +282,6 @@ class Huia_Controller_Manager_App extends Controller_App {
 				}
 			}
 
-			$this->model->save();
 
 			Session::instance()->set('success', 'Registro salvo com sucesso!');
 
