@@ -2,6 +2,8 @@
 
 class Huia_Controller_Manager_User extends Controller_Manager_App {
 	
+	public $ignore_actions = array('user_tokens');
+	
 	public $labels = array(
 		'roles' => 'Papel',
 	);
