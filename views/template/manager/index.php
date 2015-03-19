@@ -41,6 +41,8 @@
 					
 					<td><img width="50" src="<?php echo $row->get_image_url($name); ?>" class="img-rounded"></td>
 
+					<?php elseif (in_array($name, $boolean_fields)) : ?>
+						<td><?php echo $boolean_fields_labels[$name][$row->$name]; ?></td>
 					<?php else : ?>
 					
 					<td><?php echo $row->$name; ?></td>

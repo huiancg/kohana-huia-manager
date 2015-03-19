@@ -8,6 +8,8 @@ class Huia_Controller_Manager_App extends Controller_App {
 	public $model_name = NULL;
 	public $model = NULL;
 	public $image_fields = array('image');
+	public $boolean_fields = array('is_active');
+	public $boolean_fields_labels = array('default' => array('Não', 'Sim'));
 	public $ignore_actions = array();
 	public $ignore_fields = array();
 	public $actions = array();
@@ -69,7 +71,6 @@ class Huia_Controller_Manager_App extends Controller_App {
 				$this->parent_model = ORM::factory($this->parent, $this->parent_id);
 			}
 
-
 			$this->belongs_to = Arr::merge($this->belongs_to, $this->model->belongs_to());
 			View::set_global('belongs_to', $this->belongs_to);
 			
@@ -79,7 +80,11 @@ class Huia_Controller_Manager_App extends Controller_App {
 			$this->labels = Arr::merge($this->labels, $this->model->labels());
 			View::set_global('labels', $this->labels);
 		}
-
+		foreach($this->boolean_fields as $field)
+		{
+			if( ! isset($this->boolean_fields_labels[$field]))
+				$this->boolean_fields_labels[$field] = $this->boolean_fields_labels['default'];
+		}
 		parent::before();
 	}
 
@@ -94,6 +99,8 @@ class Huia_Controller_Manager_App extends Controller_App {
 
 		View::set_global('model_name', $this->model_name);
 		View::set_global('image_fields', $this->image_fields);
+		View::set_global('boolean_fields', $this->boolean_fields);
+		View::set_global('boolean_fields_labels', $this->boolean_fields_labels);
 		View::set_global('ignore_actions', $this->ignore_actions);
 		View::set_global('form_actions', $this->form_actions());
 		View::set_global('breadcrumb', $this->breadcrumb());

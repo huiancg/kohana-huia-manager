@@ -30,6 +30,11 @@
 
 		<?php echo Form::select($name.'[]', Model_App::factory(ucfirst(Inflector::singular($name)))->find_all()->as_array('id', 'name'), $model->$name->find_all()->as_array('id'), array('class' => 'form-control', 'multiple' => 'multiple')) ?>
 		
+		<?php elseif (in_array($name, $boolean_fields)) : ?>			
+			<div class="radio form-control">				
+				<label><?php echo Form::radio($name, 1, (bool) $model->$name) . $boolean_fields_labels[$name][1] ?></label>				
+				<label><?php echo Form::radio($name, 0, ! $model->$name) . $boolean_fields_labels[$name][0] ?></label>				
+			</div>
 		<?php else : ?>
 		
 		<?php echo Form::input($name, $model->$name, array('class' => 'form-control')) ?>
