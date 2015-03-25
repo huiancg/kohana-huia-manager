@@ -4,7 +4,6 @@
 <?php echo View::factory($breadcrumb) ?>
 
 <form method="post" enctype="multipart/form-data">
-<?php echo DEbug::vars($belongs_to);?>
 	<?php foreach ($labels as $name => $description) : ?>
 	<?php if (in_array($name, $ignore_fields)) { continue; } ?>
 	<div class="form-group">

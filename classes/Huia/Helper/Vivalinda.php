@@ -9,6 +9,7 @@ class Huia_Helper_VivaLinda {
 
     protected static function _cache($key, $value = NULL)
     {
+        return NULL;
         $result = Cache::instance()->get($key);
         if ($value != NULL)
         {
@@ -81,11 +82,12 @@ class Huia_Helper_VivaLinda {
 
     public static function get_news($page = 1, $rows = 18)
     {    
+        $class = get_called_class();        
         $news = self::_cache('news'.$page.'rows'.$rows);
         
         if(!$news)
         {
-            $url = self::DOMAIN_VIVA_LINDA.'wp-json/posts_by_stamp?stamp='.self::STAMP_ID.'&page='.$page.'&rows='.$rows;
+            $url = self::DOMAIN_VIVA_LINDA.'wp-json/posts_by_stamp?stamp='.$class::STAMP_ID.'&page='.$page.'&rows='.$rows;
             $json = json_decode(Request::factory($url)->execute()->body());
             $news = $json->posts;
             self::_cache('news'.$page.'rows'.$rows, $news);            
