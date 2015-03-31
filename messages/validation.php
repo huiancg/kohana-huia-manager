@@ -24,4 +24,7 @@ return array(
 	'range'         => ':field deve estar entre :param2 e :param3',
 	'regex'         => ':field não é compatível com o formato válido',
 	'url'           => ':field tem que ser uma url',
+	
+	'not_tags'		=> ':field não pode possuir HTML',
+	'unique'		=> ':field já está cadastrado',
 );
