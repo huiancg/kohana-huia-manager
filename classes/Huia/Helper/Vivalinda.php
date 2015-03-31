@@ -7,22 +7,10 @@ class Huia_Helper_VivaLinda {
     const DOMAIN_VIVA_LINDA  = 'http://vivalinda.boticario.com.br/';
     const STAMP_ID = 1375;
 
-    protected static function _cache($key, $value = NULL)
-    {
-        return NULL;
-        $result = Cache::instance()->get($key);
-        if ($value != NULL)
-        {
-            $result = $value;
-            Cache::instance()->set($key, $value);
-        }
-        return $result;
-    }
-
     protected static function _get_content($url)
     {    	
-        $cache = self::_cache($url);        
-        if ($cache == NULL)
+        $cache = Cache::instance()->get($url);        
+        if ($cache === NULL)
         {
             try
             {
@@ -31,7 +19,7 @@ class Huia_Helper_VivaLinda {
                 {
                     return "";
                 }
-                $cache = self::_cache($url, $request);
+                $cache = Cache::instance()->set($url, $request);
             }
             catch (Exception $e)
             {
@@ -83,14 +71,14 @@ class Huia_Helper_VivaLinda {
     public static function get_news($page = 1, $rows = 18)
     {    
         $class = get_called_class();        
-        $news = self::_cache('news'.$page.'rows'.$rows);
+        $news = Cache::instance()->get('news'.$page.'rows'.$rows);
         
-        if(!$news)
+        if ($news === NULL)
         {
             $url = self::DOMAIN_VIVA_LINDA.'wp-json/posts_by_stamp?stamp='.$class::STAMP_ID.'&page='.$page.'&rows='.$rows;
             $json = json_decode(Request::factory($url)->execute()->body());
             $news = $json->posts;
-            self::_cache('news'.$page.'rows'.$rows, $news);            
+            Cache::instance()->set('news'.$page.'rows'.$rows, $news);            
         }
         
         return $news;
