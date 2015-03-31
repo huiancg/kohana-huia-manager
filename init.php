@@ -6,6 +6,26 @@ Cookie::$salt = md5(Kohana::$base_url . '342353a7be5589aa0bed2ef76ce1a4a1');
 // DB by env
 Database::$default = Kohana::$environment;
 
+// create log path
+$log_path = APPPATH.'logs/'.gethostname();
+if ( ! is_dir($log_path))
+{
+	try
+	{
+		// Create the log directory
+		mkdir($log_path, 0755, TRUE);
+
+		// Set permissions (must be manually set to fix umask issues)
+		chmod($log_path, 0755);
+	}
+	catch (Exception $e)
+	{
+		throw new Kohana_Exception('Could not create log directory :dir',
+			array(':dir' => Debug::path($log_path)));
+	}
+}
+unset($log_path);
+
 // Auto base_url
 if (Kohana::$base_url === '/')
 {
