@@ -134,4 +134,87 @@ class Huia_ORM extends Kohana_ORM {
         return $this;
     }
 	
+	public static function generate_model($model)
+	{
+		$class_name = 'Model_'.$model;
+		// Create if dont exists
+		if ( ! class_exists($class_name))
+		{
+			$view = View::factory('template/orm');
+			$view->set('class_name', $class_name);
+			
+			$file_name = str_replace('_', DIRECTORY_SEPARATOR, $model);
+			
+			$model_base = APPPATH.'classes'.DIRECTORY_SEPARATOR.'model'.DIRECTORY_SEPARATOR;
+			$file_name = $model_base . $file_name . EXT;
+			
+			create_dir(dirname($file_name));
+			
+			$table_name = strtolower(Inflector::plural($model));
+			$fields = DB::query(Database::SELECT, 'SHOW FIELDS FROM ' . $table_name)->execute();
+			
+			$rules = array();
+			$labels = array();
+			
+			foreach ($fields as $field)
+			{
+				$name = Arr::get($field, 'Field');
+				$title = ucfirst($name);
+				$type = Arr::get($field, 'Type');
+				
+				// ignore id and _at$
+				if ($name === 'id' OR preg_match('@_at$@', $name))
+				{
+					continue;
+				}
+				
+				$field_rules = array();
+				
+				// not null
+				if (Arr::get($field, 'Null') === 'NO')
+				{
+					$field_rules[] = "array('not_empty'),";
+				}
+				
+				// max length
+				if ($type)
+				{
+					preg_match('@varchar\(([0-9]+)\)@', $type, $type_matches);
+					$field_rules[] = "array('max_length', array(':value', $type_matches[1])),";
+				}
+				
+				$rules[$name] = $field_rules;
+				$labels[$name] = $title;
+			}
+			
+			$view->set('rules', $rules);
+			$view->set('labels', $labels);
+			
+			file_put_contents($file_name, $view->render());
+		}
+	}
+	
+	/**
+	 * Creates and returns a new model. 
+	 * Model name must be passed with its' original casing, e.g.
+	 * 
+	 *    $model = ORM::factory('User_Token');
+	 *
+	 * @chainable
+	 * @param   string  $model  Model name
+	 * @param   mixed   $id     Parameter for find()
+	 * @return  ORM
+	 */
+	public static function factory($model, $id = NULL)
+	{
+		$class_name = 'Model_'.$model;
+		
+		if (Kohana::$environment === Kohana::DEVELOPMENT)
+		{
+			self::generate_model($model);
+		}
+		
+		return parent::factory($model, $id);
+	}
+	
 }
