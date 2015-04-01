@@ -179,8 +179,16 @@ class Huia_ORM extends Kohana_ORM {
 				// max length
 				if ($type)
 				{
-					preg_match('@varchar\(([0-9]+)\)@', $type, $type_matches);
-					$field_rules[] = "array('max_length', array(':value', $type_matches[1])),";
+					if (strpos($type, 'varchar') !== FALSE)
+					{
+						preg_match('@varchar\(([0-9]+)\)@', $type, $varchar_matches);
+						$field_rules[] = "array('max_length', array(':value', $varchar_matches[1])),";
+					}
+					if (strpos($type, 'int') !== FALSE)
+					{
+						preg_match('@int\(([0-9]+)\)@', $type, $int_matches);
+						$field_rules[] = "array('max_length', array(':value', $int_matches[1])),";
+					}
 				}
 				
 				$rules[$name] = $field_rules;
