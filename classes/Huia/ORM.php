@@ -152,7 +152,7 @@ class Huia_ORM extends Kohana_ORM {
 			
 			$file_name = str_replace('_', DIRECTORY_SEPARATOR, $model);
 			
-			$model_base = APPPATH.'classes'.DIRECTORY_SEPARATOR.'model'.DIRECTORY_SEPARATOR;
+			$model_base = APPPATH.'classes'.DIRECTORY_SEPARATOR.'Model'.DIRECTORY_SEPARATOR;
 			$file_name = $model_base . $file_name . EXT;
 			
 			create_dir(dirname($file_name));
