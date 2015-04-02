@@ -145,7 +145,7 @@ class Huia_ORM extends Kohana_ORM {
 	{
 		$class_name = 'Model_'.$model;
 		// Create if dont exists
-		if (TRUE OR ! class_exists($class_name))
+		if ( ! class_exists($class_name))
 		{
 			$view = View::factory('template/orm');
 			$view->set('class_name', $class_name);
