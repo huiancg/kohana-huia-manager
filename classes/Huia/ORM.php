@@ -134,11 +134,18 @@ class Huia_ORM extends Kohana_ORM {
         return $this;
     }
 	
+	public static function get_model_name($model)
+	{
+		$model = explode('_', $model);
+		$model = array_map('ucfirst', $model);
+		return implode('_', $model);
+	}
+	
 	public static function generate_model($model)
 	{
 		$class_name = 'Model_'.$model;
 		// Create if dont exists
-		if ( ! class_exists($class_name))
+		if (TRUE OR ! class_exists($class_name))
 		{
 			$view = View::factory('template/orm');
 			$view->set('class_name', $class_name);
@@ -151,16 +158,18 @@ class Huia_ORM extends Kohana_ORM {
 			create_dir(dirname($file_name));
 			
 			$table_name = strtolower(Inflector::plural($model));
+			$table_id = strtolower($model) . '_id';
 			
 			$rules = array();
 			$labels = array();
 			$has_many = array();
 			$belongs_to = array();
+			$columns = Database::instance()->list_columns($table_name);
 			
-			foreach (Database::instance()->list_columns($table_name) as $field)
+			foreach ($columns as $field)
 			{
 				$name = Arr::get($field, 'column_name');
-				$type = Arr::get($field, 'int');
+				$low_name = str_replace('_id', '', $name);
 				$character_maximum_length = Arr::get($field, 'character_maximum_length');
 				
 				$title = ucfirst($name);
@@ -185,27 +194,58 @@ class Huia_ORM extends Kohana_ORM {
 					$field_rules[] = "array('max_length', array(':value', $character_maximum_length)),";
 				}
 				
-				$rules[$name] = $field_rules;
-				$labels[$name] = $title;
+				// cpf
+				if ($name === 'cpf')
+				{
+					$field_rules[] = "array('cpf', array(':value')),";
+				}
+				
+				// rules
+				if ( ! empty($field_rules))
+				{
+					$rules[$name] = $field_rules;
+				}
+				
+				// labels
+				if ( ! preg_match('@_id$@', $name))
+				{
+					$labels[$name] = $title;
+				}
+			
+				// belongs to
+				if (preg_match('@_id$@', $name))
+				{
+					$model_name = self::get_model_name($low_name);
+					
+					$belongs_to[$low_name] = "array(".
+						"'model' => '" . $model_name . "'".
+					"),";
+				}
 			}
 			
-			/*
-			protected $_has_many = array(
-				'categories' => array(
-					'model' => 'Category',
-					'through' => 'products_categories',
-				),
-			);
-			*/
-			// has many through
 			foreach (Database::instance()->list_tables() as $name)
 			{
+				$_columns = array_keys(Database::instance()->list_columns($name));
+				
+				// has many through
 				if (preg_match('/(^'.$table_name.'_(.*)|(.*)_'.$table_name.'$)/', $name, $matchs))
 				{
 					$related = $matchs[count($matchs) - 1];
 					$has_many[$related] = "array(".
-						"'model' => '" . ucfirst($related) . "', ".
+						"'model' => '" . self::get_model_name($related) . "', ".
 						"'through' => '" . $name . "'".
+					"),";
+				}
+				
+				// has many
+				if (in_array('id', $_columns) AND in_array($table_id, $_columns))
+				{
+					$related = Inflector::singular($name);
+					
+					$model_name = self::get_model_name($related);
+					
+					$has_many[$name] = "array(".
+						"'model' => '" . $model_name . "'".
 					"),";
 				}
 			}
