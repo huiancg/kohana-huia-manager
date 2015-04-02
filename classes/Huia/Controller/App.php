@@ -22,6 +22,12 @@ abstract class Huia_Controller_App extends Controller {
 	 */
 	public function before()
 	{
+		// autogen database
+		if (Kohana::$environment === Kohana::DEVELOPMENT AND class_exists('ORM'))
+		{
+			ORM::generate_models();
+		}
+		
 		// Template View auto load
 		if ($this->template !== NULL)
 		{

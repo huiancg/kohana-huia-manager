@@ -141,6 +141,24 @@ class Huia_ORM extends Kohana_ORM {
 		return implode('_', $model);
 	}
 	
+	public static function generate_models()
+	{
+		foreach (Database::instance()->list_tables() as $name)
+		{
+			$_columns = array_keys(Database::instance()->list_columns($name));
+			
+			// ignore through
+			if ( ! in_array('id', $_columns))
+			{
+				continue;
+			}
+			
+			$model_name = self::get_model_name(Inflector::singular($name));
+			
+			self::generate_model($model_name);
+		}
+	}
+	
 	public static function generate_model($model)
 	{
 		$class_name = 'Model_'.$model;
