@@ -151,16 +151,19 @@ class Huia_ORM extends Kohana_ORM {
 			create_dir(dirname($file_name));
 			
 			$table_name = strtolower(Inflector::plural($model));
-			$fields = DB::query(Database::SELECT, 'SHOW FIELDS FROM ' . $table_name)->execute();
 			
 			$rules = array();
 			$labels = array();
+			$has_many = array();
+			$belongs_to = array();
 			
-			foreach ($fields as $field)
+			foreach (Database::instance()->list_columns($table_name) as $field)
 			{
-				$name = Arr::get($field, 'Field');
+				$name = Arr::get($field, 'column_name');
+				$type = Arr::get($field, 'int');
+				$character_maximum_length = Arr::get($field, 'character_maximum_length');
+				
 				$title = ucfirst($name);
-				$type = Arr::get($field, 'Type');
 				
 				// ignore id and _at$
 				if ($name === 'id' OR preg_match('@_at$@', $name))
@@ -171,32 +174,46 @@ class Huia_ORM extends Kohana_ORM {
 				$field_rules = array();
 				
 				// not null
-				if (Arr::get($field, 'Null') === 'NO')
+				if (Arr::get($field, 'is_nullable') === FALSE)
 				{
 					$field_rules[] = "array('not_empty'),";
 				}
 				
 				// max length
-				if ($type)
+				if ($character_maximum_length)
 				{
-					if (strpos($type, 'varchar') !== FALSE)
-					{
-						preg_match('@varchar\(([0-9]+)\)@', $type, $varchar_matches);
-						$field_rules[] = "array('max_length', array(':value', $varchar_matches[1])),";
-					}
-					if (strpos($type, 'int') !== FALSE)
-					{
-						preg_match('@int\(([0-9]+)\)@', $type, $int_matches);
-						$field_rules[] = "array('max_length', array(':value', $int_matches[1])),";
-					}
+					$field_rules[] = "array('max_length', array(':value', $character_maximum_length)),";
 				}
 				
 				$rules[$name] = $field_rules;
 				$labels[$name] = $title;
 			}
 			
+			/*
+			protected $_has_many = array(
+				'categories' => array(
+					'model' => 'Category',
+					'through' => 'products_categories',
+				),
+			);
+			*/
+			// has many through
+			foreach (Database::instance()->list_tables() as $name)
+			{
+				if (preg_match('/(^'.$table_name.'_(.*)|(.*)_'.$table_name.'$)/', $name, $matchs))
+				{
+					$related = $matchs[count($matchs) - 1];
+					$has_many[$related] = "array(".
+						"'model' => '" . ucfirst($related) . "', ".
+						"'through' => '" . $name . "'".
+					"),";
+				}
+			}
+			
 			$view->set('rules', $rules);
 			$view->set('labels', $labels);
+			$view->set('has_many', $has_many);
+			$view->set('belongs_to', $belongs_to);
 			
 			file_put_contents($file_name, $view->render());
 		}
