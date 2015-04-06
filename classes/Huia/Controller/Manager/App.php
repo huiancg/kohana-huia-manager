@@ -75,7 +75,6 @@ class Huia_Controller_Manager_App extends Controller_App {
 				$this->parent_model = ORM::factory($this->parent, $this->parent_id);
 			}
 
-
 			$text_fields = array();
 			foreach ($this->model->table_columns() as $column => $values)
 			{

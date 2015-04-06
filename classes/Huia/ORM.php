@@ -206,6 +206,8 @@ class Huia_ORM extends Kohana_ORM {
 						"'model' => '" . self::get_model_name(Inflector::singular($related)) . "', ".
 						"'through' => '" . $name . "'".
 					"),";
+					
+					$labels[$related] = ucfirst($related);
 				}
 				
 				// has many

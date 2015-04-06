@@ -15,12 +15,14 @@ class Huia_Model_App extends ORM {
 		return ORM::factory(self::get_table())->find_all();
 	}
 	
-	public function all_as_array($results = array())
+	public function all_as_array($table_name = NULL)
 	{
 		$has_many = $this->has_many();
 		$belongs_to = $this->belongs_to();
 
 		$models = $this->find_all();
+
+		$results = array();
 
 		foreach ($models as $item)
 		{
@@ -33,7 +35,12 @@ class Huia_Model_App extends ORM {
 
 			foreach ($has_many as $key => $values)
 			{
-				$result[$key] = $item->$key->all_as_array();
+				// schmittless
+				if ($key === $table_name)
+				{
+					continue;
+				}
+				$result[$key] = $item->$key->all_as_array($this->table_name());
 			}
 			
 			$results[] = $result;

@@ -35,20 +35,31 @@
 					<td><?php echo $row->id; ?></td>
 					<?php foreach ($labels as $name => $description) : ?>
 					
+					<td>
 					<?php if (in_array($name, $ignore_fields)) { continue; } ?>
 					
 					<?php if (in_array($name, $image_fields)) : ?>
 					
-					<td><img width="50" src="<?php echo $row->get_image_url($name); ?>" class="img-rounded"></td>
+						<img width="50" src="<?php echo $row->get_image_url($name); ?>" class="img-rounded">
 
+					<?php elseif (Arr::get($has_many, $name)) : ?>
+
+						<?php foreach ($row->{$name}->find_all() as $item) : ?>
+							<?php $item = $item->as_array(); ?>
+							<?php echo Arr::get($item, 'name', Arr::get($item, 'title'), Arr::get($item, 'description'), Arr::get($item, 'id')); ?>, 
+						<?php endforeach; ?>
+					
 					<?php elseif (in_array($name, $boolean_fields)) : ?>
-						<td><?php echo $boolean_fields_labels[$name][$row->$name]; ?></td>
+
+						<?php echo $boolean_fields_labels[$name][$row->$name]; ?>
+
 					<?php else : ?>
 					
-					<td><?php echo Text::limit_chars(strip_tags($row->$name), 20); ?></td>
+						<?php echo Text::limit_chars(strip_tags($row->$name), 20); ?>
 					
 					<?php endif; ?>
-					
+					</td>
+
 					<?php endforeach; ?> 
 
 					<?php echo View::factory($form_actions, $row->as_array()); ?>
