@@ -87,53 +87,6 @@ class Huia_ORM extends Kohana_ORM {
         return $response;
     }
 	
-	/**
-     * Tests if a unique key value exists in the database.
-     *
-     * @param   mixed    the value to test
-     * @param   string   field name
-     * @return  boolean
-     */
-    public function unique($field, $value)
-    {
-        return!(bool) DB::select(array('COUNT("*")', 'total_count'))
-                        ->from($this->_table_name)
-                        ->where($field, '=', $value)
-                        ->where($this->_primary_key, '!=', $this->pk())
-                        ->execute($this->_db)
-                        ->get('total_count');
-    }
-
-    /**
-     * Find by primary key
-     * 
-     * @param  string  $field Primary key value
-     * @return  ORM  
-     */
-    public function find_by_primary_key($field)
-    {
-        $primary_cols = array();
-        foreach ($this->list_columns() as $row => $fields)
-        {
-            foreach ($fields as $key => $value)
-            {
-                if ($row === 'id' OR $key !== 'key' OR ($value !== 'PRI' AND $value !== 'UNI'))
-                    continue;
-
-                $primary_cols[] = $row;
-            }
-        };
-
-        $this->or_where_open();
-        foreach ($primary_cols as $col)
-        {
-            $this->or_where($col, '=', $field);
-        }
-        $this->or_where_close();
-
-        return $this;
-    }
-	
 	public static function get_model_name($model)
 	{
 		$model = explode('_', $model);
