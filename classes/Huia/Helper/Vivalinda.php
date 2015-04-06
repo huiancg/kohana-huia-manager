@@ -97,7 +97,7 @@ class Huia_Helper_VivaLinda {
             $request = Request::factory($url);
             $request->method(Request::POST);
             $request->post('category', $category);
-            $request->post('most_popular', $most_popular);
+            $request->post('mostPopular', $most_popular);
             $request->post('limit', $limit);
             $request->post('offset', $offset);
             $request->post('orderby', $orderby);
