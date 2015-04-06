@@ -203,7 +203,7 @@ class Huia_ORM extends Kohana_ORM {
 				{
 					$related = $matchs[count($matchs) - 1];
 					$has_many[$related] = "array(".
-						"'model' => '" . self::get_model_name($related) . "', ".
+						"'model' => '" . self::get_model_name(Inflector::singular($related)) . "', ".
 						"'through' => '" . $name . "'".
 					"),";
 				}

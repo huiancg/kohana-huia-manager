@@ -67,7 +67,11 @@ class Huia_Controller_Manager_App extends Controller_App {
 				$this->parent_controller = 'Controller_Manager_'.ucfirst($this->parent);
 				$this->parent_controller = new $this->parent_controller($this->request, $this->response);
 
-				$this->model->where($this->foreign_key, '=', $this->parent_id);
+				if (isset($this->model->{$this->foreign_key}))
+				{
+					$this->model->where($this->foreign_key, '=', $this->parent_id);
+				}
+				
 				$this->parent_model = ORM::factory($this->parent, $this->parent_id);
 			}
 
