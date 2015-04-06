@@ -13,6 +13,21 @@
 
 		<?php echo Form::password($name, NULL, array('class' => 'form-control')) ?>
 
+		<?php elseif (in_array($name, $text_fields)) : ?>
+		
+		<?php echo Form::textarea($name, $model->$name, array('class' => 'form-control')) ?>
+
+		<script>
+        CKEDITOR.replace('<?php echo $name ?>', {
+      			toolbar: [
+							{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
+							{ name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
+							{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] }, 
+							{ name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] }
+						]
+      	});
+    </script>
+
 		<?php elseif (in_array($name, $image_fields)) : ?>
 		
 		<?php echo Form::file($name, array('class' => 'form-control')) ?>

@@ -75,6 +75,17 @@ class Huia_Controller_Manager_App extends Controller_App {
 				$this->parent_model = ORM::factory($this->parent, $this->parent_id);
 			}
 
+
+			$text_fields = array();
+			foreach ($this->model->table_columns() as $column => $values)
+			{
+				if (Arr::get($values, 'data_type') === 'text')
+				{
+					$text_fields[] = $column;		
+				}	
+			}
+			View::set_global('text_fields', $text_fields);
+
 			$this->belongs_to = Arr::merge($this->belongs_to, $this->model->belongs_to());
 			View::set_global('belongs_to', $this->belongs_to);
 			

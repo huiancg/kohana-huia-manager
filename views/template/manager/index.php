@@ -45,7 +45,7 @@
 						<td><?php echo $boolean_fields_labels[$name][$row->$name]; ?></td>
 					<?php else : ?>
 					
-					<td><?php echo $row->$name; ?></td>
+					<td><?php echo Text::limit_chars(strip_tags($row->$name), 20); ?></td>
 					
 					<?php endif; ?>
 					

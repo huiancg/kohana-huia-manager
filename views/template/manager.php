@@ -10,6 +10,22 @@
 	</script>
 </head>
 <body>
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>
+	<script>
+	</script>
+	<script>
+		$('body').on('click', '.btn-delete', function(){
+			if(!confirm('Tem certeza que deseja excluir?'))
+				return false;
+		});
+		$('body').on('change', '.filter-submit', function(){
+			$(this).parents('form').submit();
+		});
+	</script>
+
 	<nav class="navbar navbar-default ng-scope" role="navigation">
 		<div class="container">
 			<div class="navbar-header">					
@@ -37,18 +53,6 @@
 		<?php } ?>
 		<?php echo $content ?>
 	</section>
-	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-	<script>
-		$('body').on('click', '.btn-delete', function(){
-			if(!confirm('Tem certeza que deseja excluir?'))
-				return false;
-		});
-		$('body').on('change', '.filter-submit', function(){
-			$(this).parents('form').submit();
-		});
-	</script>
 	<?php echo View::factory($scripts); ?>
 </body>
 </html>
