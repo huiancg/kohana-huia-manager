@@ -85,7 +85,54 @@ class Huia_Controller_Manager_App extends Controller_App {
 			if( ! isset($this->boolean_fields_labels[$field]))
 				$this->boolean_fields_labels[$field] = $this->boolean_fields_labels['default'];
 		}
+		
+		$model_classes = $this->get_models();
+		View::set_global('model_classes', $model_classes);
+		
 		parent::before();
+		
+		// autogen controllers
+		if (Kohana::$environment === Kohana::DEVELOPMENT)
+		{
+			self::generate_controllers($model_classes);
+		}
+	}
+	
+	public function get_models()
+	{
+		$dir = 'classes'.DIRECTORY_SEPARATOR.'Model'.DIRECTORY_SEPARATOR;
+		$models = array();
+		
+		foreach ((Kohana::list_files($dir)) as $file => $path)
+		{
+			if (is_string($path) AND strpos($path, APPPATH) !== FALSE)
+			{
+				$models[] = str_replace(array($dir, APPPATH, EXT), '', $path);
+			}
+		}
+		
+		return $models;
+	}
+	
+	public static function generate_controllers($model_classes)
+	{
+		foreach ($model_classes as $class_name)
+		{
+			if (class_exists('Controller_Manager_'.$class_name))
+			{
+				continue;
+			}
+			
+			$view = View::factory('template/manager/controller');
+			$view->set('class_name', $class_name);
+			
+			$base = APPPATH.'classes'.DIRECTORY_SEPARATOR.'Controller'.DIRECTORY_SEPARATOR.'Manager'.DIRECTORY_SEPARATOR;
+			$file_name = $base . $class_name . EXT;
+			
+			create_dir(dirname($file_name));
+			
+			file_put_contents($file_name, $view->render());
+		}
 	}
 
 	public function after()

@@ -30,8 +30,6 @@ function create_dir($path)
 // create log path
 create_dir(APPPATH.'logs/'.gethostname());
 
-unset($log_path);
-
 // Auto base_url
 if (Kohana::$base_url === '/')
 {
