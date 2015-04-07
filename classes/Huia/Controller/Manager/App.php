@@ -100,7 +100,7 @@ class Huia_Controller_Manager_App extends Controller_App {
 				$this->boolean_fields_labels[$field] = $this->boolean_fields_labels['default'];
 		}
 		
-		$model_classes = $this->get_models();
+		$model_classes = ORM::get_models();
 		View::set_global('model_classes', $model_classes);
 		
 		parent::before();
@@ -110,22 +110,6 @@ class Huia_Controller_Manager_App extends Controller_App {
 		{
 			self::generate_controllers($model_classes);
 		}
-	}
-	
-	public function get_models()
-	{
-		$dir = 'classes'.DIRECTORY_SEPARATOR.'Model'.DIRECTORY_SEPARATOR;
-		$models = array();
-		
-		foreach ((Kohana::list_files($dir)) as $file => $path)
-		{
-			if (is_string($path) AND strpos($path, APPPATH) !== FALSE)
-			{
-				$models[] = str_replace(array($dir, APPPATH, EXT), '', $path);
-			}
-		}
-		
-		return $models;
 	}
 	
 	public static function generate_controllers($model_classes)
