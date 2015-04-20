@@ -64,8 +64,6 @@ class Huia_Controller_Manager_App extends Controller_App {
 			if ($this->parent_id)
 			{
 				$this->foreign_key = $this->parent . '_id';
-				$this->parent_controller = 'Controller_Manager_'.ucfirst($this->parent);
-				$this->parent_controller = new $this->parent_controller($this->request, $this->response);
 
 				if (isset($this->model->{$this->foreign_key}))
 				{
@@ -157,7 +155,7 @@ class Huia_Controller_Manager_App extends Controller_App {
 
 		if ($this->parent)
 		{
-			View::set_global('parent_title', $this->parent_controller->title);
+			View::set_global('parent_title', ucfirst($this->parent));
 			View::set_global('foreign_key', $this->parent);
 			View::set_global('parent_model', $this->parent_model);
 		}
@@ -177,7 +175,7 @@ class Huia_Controller_Manager_App extends Controller_App {
 		$parent = '';
 		if ($this->parent)
 		{
-			$parent = '/' . $this->parent_id;
+			$parent = '/' . $this->parent . '/' . $this->parent_id;
 		}
 
 		return Kohana::$base_url . strtolower($this->request->directory() . $parent . '/' . $this->model_name);

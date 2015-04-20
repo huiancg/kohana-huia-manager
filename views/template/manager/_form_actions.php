@@ -2,7 +2,7 @@
 	<?php foreach ($model->has_many() as $name => $values) : ?>
 	<?php if (Arr::get($values, 'through') OR in_array($name, $ignore_actions)) { continue; } ?>
 	<a class="btn btn-sm btn-success" href="<?php echo $url; ?>/<?php echo $id ?>/<?php echo str_replace('_id', '', Arr::get($values, 'far_key')); ?>">
-		<span class="glyphicon glyphicon-edit"></span> <?php echo Inflector::plural(Arr::get($values, 'model')); ?>
+		<span class="glyphicon glyphicon-edit"></span> <?php echo ucfirst($name); ?>
 	</a>
 	<?php endforeach; ?>
 	<?php foreach ($actions as $data) : ?>

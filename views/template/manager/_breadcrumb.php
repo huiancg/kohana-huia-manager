@@ -2,7 +2,7 @@
   <li><a href="<?php echo Kohana::$base_url; ?>manager">Manager</a></li>
 
   <?php if ($parent) : ?>
-  <li><a href="<?php echo Kohana::$base_url; ?>manager/<?php echo $parent; ?>/index"><?php echo $parent_title; ?></a></li>
+  <li><a href="<?php echo Kohana::$base_url; ?>manager/<?php echo $parent; ?>/edit/<?php echo $parent_id; ?>"><?php echo $parent_title; ?></a></li>
   <?php endif; ?>
 
   <?php foreach ($breadcrumbs as $name => $link) : ?>

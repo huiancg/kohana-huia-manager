@@ -6,6 +6,9 @@
 <form method="post" enctype="multipart/form-data">
 	<?php foreach ($labels as $name => $description) : ?>
 	<?php if (in_array($name, $ignore_fields)) { continue; } ?>
+	
+	<?php if ($parent AND $parent === $name) { continue; } ?>
+	
 	<div class="form-group">
 		<?php echo Form::label($name, $description) ?>
 
