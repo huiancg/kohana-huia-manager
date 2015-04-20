@@ -76,12 +76,13 @@ class Huia_Controller_Manager_App extends Controller_App {
 			}
 
 			$text_fields = array();
+			$this->model->reload_columns(TRUE);
 			foreach ($this->model->table_columns() as $column => $values)
 			{
 				if (Arr::get($values, 'data_type') === 'text')
 				{
 					$text_fields[] = $column;		
-				}	
+				}
 			}
 			View::set_global('text_fields', $text_fields);
 
