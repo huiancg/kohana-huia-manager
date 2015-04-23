@@ -43,14 +43,15 @@
 		
 		<?php
 		$column_name = NULL;
-		foreach ($field_name->list_columns() as $column => $values)
+		$parent_belongs = Model_App::factory(str_replace('_id', '', $name));
+		foreach ($parent_belongs->list_columns() as $column => $values)
 		{
 			if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
 			{
 				$column_name = $column;
 			}
 		}
-		$belongs_to_values = Arr::merge(array('' => 'Selecione'), Model_App::factory(str_replace('_id', '', $name))->find_all()->as_array('id', $column_name));
+		$belongs_to_values = Arr::merge(array('' => 'Selecione'), $parent_belongs->find_all()->as_array('id', $column_name));
 		?>
 		
 		<?php echo Form::select($name, $belongs_to_values, $model->$name, array('class' => 'form-control')) ?>
