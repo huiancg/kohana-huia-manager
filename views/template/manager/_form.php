@@ -40,9 +40,21 @@
 		<?php endif; ?>
 
 		<?php elseif ( ! empty($belongs_to) AND Arr::get($belongs_to, str_replace('_id', '', $name))) : ?>
-
-		<?php echo Form::select($name, Arr::merge(array('' => 'Selecione'), Model_App::factory(str_replace('_id', '', $name))->find_all()->as_array('id', 'name')), $model->$name, array('class' => 'form-control')) ?>
-
+		
+		<?php
+		$column_name = NULL;
+		foreach ($field_name->list_columns() as $column => $values)
+		{
+			if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
+			{
+				$column_name = $column;
+			}
+		}
+		$belongs_to_values = Arr::merge(array('' => 'Selecione'), Model_App::factory(str_replace('_id', '', $name))->find_all()->as_array('id', $column_name));
+		?>
+		
+		<?php echo Form::select($name, $belongs_to_values, $model->$name, array('class' => 'form-control')) ?>
+		
 		<?php elseif ( ! empty($has_many) AND Arr::get($has_many, $name) AND Arr::path($has_many, $name.'.through')) : ?>
 
 		<?php echo Form::select($name.'[]', Model_App::factory(ucfirst(Inflector::singular($name)))->find_all()->as_array('id', 'name'), $model->$name->find_all()->as_array('id'), array('class' => 'form-control', 'multiple' => 'multiple')) ?>
