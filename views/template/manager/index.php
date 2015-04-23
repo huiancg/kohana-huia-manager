@@ -49,6 +49,20 @@
 							<?php echo Arr::get($item, 'name', Arr::get($item, 'title'), Arr::get($item, 'description'), Arr::get($item, 'id')); ?>, 
 						<?php endforeach; ?>
 					
+					<?php elseif (Arr::get($belongs_to, $name)) : ?>
+						
+						<?php
+						$column_name = NULL;
+						foreach ($row->{$name}->list_columns() as $column => $values)
+						{
+							if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
+							{
+								$column_name = $column;
+							}
+						}
+						?>
+						<?php echo $row->{$name}->{$column_name}; ?>
+					
 					<?php elseif (in_array($name, $boolean_fields)) : ?>
 
 						<?php echo $boolean_fields_labels[$name][$row->$name]; ?>

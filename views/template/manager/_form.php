@@ -43,7 +43,7 @@
 		
 		<?php
 		$column_name = NULL;
-		$parent_belongs = Model_App::factory(str_replace('_id', '', $name));
+		$parent_belongs = Model_App::factory(ucfirst($name));
 		foreach ($parent_belongs->list_columns() as $column => $values)
 		{
 			if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
@@ -53,8 +53,7 @@
 		}
 		$belongs_to_values = Arr::merge(array('' => 'Selecione'), $parent_belongs->find_all()->as_array('id', $column_name));
 		?>
-		
-		<?php echo Form::select($name, $belongs_to_values, $model->$name, array('class' => 'form-control')) ?>
+		<?php echo Form::select($name.'_id', $belongs_to_values, $model->$name, array('class' => 'form-control')) ?>
 		
 		<?php elseif ( ! empty($has_many) AND Arr::get($has_many, $name) AND Arr::path($has_many, $name.'.through')) : ?>
 
