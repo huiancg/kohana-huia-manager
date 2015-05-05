@@ -3,6 +3,19 @@
 class Huia_Controller_Manager_Login extends Controller_Manager_App {
 
 	public $template = NULL;
+
+	protected function get_role($name, $description)
+	{
+		$role = ORM::factory('Role')->find_by_name($name);
+		if ( ! $role->loaded())
+		{
+			$role = ORM::factory('Role');
+			$role->name = $name;
+			$role->description = $description;
+			$role->create();
+		}
+		return (int) $role->id;
+	}
 	
 	protected function huia_auth($username, $password)
 	{
@@ -33,8 +46,15 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
 			if ( ! $model->loaded())
 			{
 				$model->values((array) $user);
-				$model->save();
-				$model->add('roles', array(1, 2));
+
+				$model->create();
+
+				$roles = array(
+					$this->get_role('admin', 'Administrative user, has access to everything.'),
+					$this->get_role('login', 'Login privileges, granted after account confirmation'),
+				);
+
+				$model->add('roles', $roles);
 			}
 			else
 			{
@@ -57,9 +77,9 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
 			$username = $this->request->post('username');
 			$password = $this->request->post('password');
 			
-			$success = Auth::instance()->login($username, $password);
-			
-			if ($success OR $this->huia_auth($username, $password))
+			$success = Auth::instance()->login($username, $password) OR $this->huia_auth($username, $password);
+
+			if ($success AND Auth::instance()->get_user()->has('roles', Model_Role::factory('Role', array('name' => 'admin'))))
 			{
 				return HTTP::redirect('manager');
 			}
