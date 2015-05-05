@@ -99,7 +99,7 @@ class Huia_Controller_Manager_App extends Controller_App {
 				$this->boolean_fields_labels[$field] = $this->boolean_fields_labels['default'];
 		}
 		
-		$model_classes = ORM::get_models();
+		$model_classes = ORM_Autogen::get_models();
 		View::set_global('model_classes', $model_classes);
 		
 		parent::before();
