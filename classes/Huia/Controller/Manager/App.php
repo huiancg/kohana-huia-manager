@@ -24,6 +24,8 @@ class Huia_Controller_Manager_App extends Controller_App {
 	public $parent_controller = NULL;
 	public $redirect = NULL;
 
+	public $cached = FALSE;
+
 	public $foreign_key = NULL;
 
 	public $breadcrumbs = array();

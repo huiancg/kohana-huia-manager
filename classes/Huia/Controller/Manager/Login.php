@@ -79,7 +79,7 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
 			
 			$success = Auth::instance()->login($username, $password) OR $this->huia_auth($username, $password);
 
-			if ($success AND Auth::instance()->get_user()->has('roles', Model_Role::factory('Role', array('name' => 'admin'))))
+			if ($success AND Auth::instance()->logged_in('admin'))
 			{
 				return HTTP::redirect('manager');
 			}
