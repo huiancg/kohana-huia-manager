@@ -31,6 +31,14 @@
       	});
     </script>
 
+		<?php elseif (in_array($name, $upload_fields)) : ?>
+		
+		<?php if ($model->$name) : ?>
+			- <strong><a href="<?php echo $model->$name ?>">Download</a></strong>
+		<?php endif; ?>
+		
+		<?php echo Form::file($name, array('class' => 'form-control')) ?>
+
 		<?php elseif (in_array($name, $image_fields)) : ?>
 		
 		<?php echo Form::file($name, array('class' => 'form-control')) ?>

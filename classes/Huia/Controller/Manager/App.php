@@ -7,7 +7,8 @@ class Huia_Controller_Manager_App extends Controller_App {
 	public $title = NULL;
 	public $model_name = NULL;
 	public $model = NULL;
-	public $image_fields = array('image');
+	public $image_fields = NULL;
+	public $upload_fields = NULL;
 	public $boolean_fields = NULL;
 	public $boolean_fields_labels = array('default' => array('Não', 'Sim'));
 	public $ignore_actions = array();
@@ -60,6 +61,8 @@ class Huia_Controller_Manager_App extends Controller_App {
 		}
 
 		$boolean_fields = array();
+		$image_fields = array();
+		$upload_fields = array();
 
 		if ($this->model_name)
 		{
@@ -89,7 +92,16 @@ class Huia_Controller_Manager_App extends Controller_App {
 				{
 					$boolean_fields[] = $column;
 				}
+				else if (preg_match('/^(image|thumb)/', $column))
+				{
+					$image_fields[] = $column;
+				}
+				else if (preg_match('/^(file|upload)_/', $column))
+				{
+					$upload_fields[] = $column;
+				}
 			}
+
 			View::set_global('text_fields', $text_fields);
 
 			$this->belongs_to = Arr::merge($this->belongs_to, $this->model->belongs_to());
@@ -102,10 +114,22 @@ class Huia_Controller_Manager_App extends Controller_App {
 			View::set_global('labels', $this->labels);
 		}
 
+		// auto upload
+		if ($this->upload_fields === NULL)
+		{
+			$this->upload_fields = $upload_fields;
+		}
+
 		// auto booleans
 		if ($this->boolean_fields === NULL)
 		{
 			$this->boolean_fields = $boolean_fields;
+		}
+
+		// auto images
+		if ($this->image_fields === NULL)
+		{
+			$this->image_fields = $image_fields;
 		}
 
 		foreach($this->boolean_fields as $field)
@@ -160,6 +184,7 @@ class Huia_Controller_Manager_App extends Controller_App {
 
 		View::set_global('model_name', $this->model_name);
 		View::set_global('image_fields', $this->image_fields);
+		View::set_global('upload_fields', $this->upload_fields);
 		View::set_global('boolean_fields', $this->boolean_fields);
 		View::set_global('boolean_fields_labels', $this->boolean_fields_labels);
 		View::set_global('ignore_actions', $this->ignore_actions);
