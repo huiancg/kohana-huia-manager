@@ -110,7 +110,17 @@ class Huia_Controller_Manager_App extends Controller_App {
 			$this->has_many = Arr::merge($this->has_many, $this->model->has_many());
 			View::set_global('has_many', $this->has_many);
 			
-			$this->labels = Arr::merge($this->labels, $this->model->labels());
+			$model_labels = $this->model->labels();
+			foreach ($model_labels as $key => $value)
+			{
+				// ignore through secundary
+				if (Arr::get($this->has_many, $key) AND preg_match('/^'.$key.'_/', Arr::get($this->has_many[$key], 'through')))
+				{
+					unset($model_labels[$key]);
+				}
+			}
+			
+			$this->labels = Arr::merge($this->labels, $model_labels);
 			View::set_global('labels', $this->labels);
 		}
 

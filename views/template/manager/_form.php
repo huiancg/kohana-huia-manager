@@ -65,7 +65,18 @@
 		
 		<?php elseif ( ! empty($has_many) AND Arr::get($has_many, $name) AND Arr::path($has_many, $name.'.through')) : ?>
 
-		<?php echo Form::select($name.'[]', Model_App::factory(ucfirst(Inflector::singular($name)))->find_all()->as_array('id', 'name'), $model->$name->find_all()->as_array('id'), array('class' => 'form-control', 'multiple' => 'multiple')) ?>
+		<?php
+		$column_name = NULL;
+		$model_parent_name = ucfirst(Inflector::singular($name));
+		$parent_belongs = Model_App::factory($model_parent_name);
+		foreach ($parent_belongs->list_columns() as $column => $values)
+		{
+			if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
+			{
+				$column_name = $column;
+			}
+		}
+		echo Form::select($name.'[]', Model_App::factory($model_parent_name)->find_all()->as_array('id', $column_name), $model->$name->find_all()->as_array('id'), array('class' => 'form-control', 'multiple' => 'multiple')) ?>
 		
 		<?php elseif (in_array($name, $boolean_fields)) : ?>			
 			<div class="radio form-control">				
