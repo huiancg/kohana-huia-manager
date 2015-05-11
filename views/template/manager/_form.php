@@ -34,7 +34,7 @@
 		<?php elseif (in_array($name, $upload_fields)) : ?>
 		
 		<?php if ($model->$name) : ?>
-			- <strong><a href="<?php echo $model->$name ?>">Download</a></strong>
+			- <strong><a target="_blank" href="<?php echo $model->get_url($name); ?>">Download</a></strong>
 		<?php endif; ?>
 		
 		<?php echo Form::file($name, array('class' => 'form-control')) ?>
@@ -44,7 +44,7 @@
 		<?php echo Form::file($name, array('class' => 'form-control')) ?>
 		
 		<?php if ($model->$name) : ?>
-			<br /><img src="<?php echo $model->get_image_url($name); ?>">
+			<br /><img src="<?php echo $model->get_url($name); ?>">
 		<?php endif; ?>
 
 		<?php elseif ( ! empty($belongs_to) AND Arr::get($belongs_to, str_replace('_id', '', $name))) : ?>
