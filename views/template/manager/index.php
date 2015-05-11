@@ -38,9 +38,13 @@
 					<td>
 					<?php if (in_array($name, $ignore_fields)) { continue; } ?>
 					
-					<?php if (in_array($name, $image_fields)) : ?>
+					<?php if (in_array($name, $upload_fields)) : ?>
+
+						<a target="_blank" href="<?php echo $row->get_url($name); ?>">Download</a>
 					
-						<img width="50" src="<?php echo $row->get_image_url($name); ?>" class="img-rounded">
+					<?php elseif (in_array($name, $image_fields)) : ?>
+					
+						<img width="50" src="<?php echo $row->get_url($name); ?>" class="img-rounded">
 
 					<?php elseif (Arr::get($has_many, $name)) : ?>
 
