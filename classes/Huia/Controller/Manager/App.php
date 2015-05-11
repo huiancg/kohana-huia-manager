@@ -8,7 +8,7 @@ class Huia_Controller_Manager_App extends Controller_App {
 	public $model_name = NULL;
 	public $model = NULL;
 	public $image_fields = array('image');
-	public $boolean_fields = array('is_active');
+	public $boolean_fields = NULL;
 	public $boolean_fields_labels = array('default' => array('Não', 'Sim'));
 	public $ignore_actions = array();
 	public $ignore_fields = array();
@@ -59,6 +59,8 @@ class Huia_Controller_Manager_App extends Controller_App {
 			$this->parent_id = $this->request->param('parent_id');
 		}
 
+		$boolean_fields = array();
+
 		if ($this->model_name)
 		{
 			$this->model = ORM::factory($this->model_name, $this->request->param('id'));
@@ -83,6 +85,10 @@ class Huia_Controller_Manager_App extends Controller_App {
 				{
 					$text_fields[] = $column;		
 				}
+				else if (Arr::get($values, 'data_type') === 'tinyint' AND Arr::get($values, 'display') == 1)
+				{
+					$boolean_fields[] = $column;
+				}
 			}
 			View::set_global('text_fields', $text_fields);
 
@@ -95,10 +101,19 @@ class Huia_Controller_Manager_App extends Controller_App {
 			$this->labels = Arr::merge($this->labels, $this->model->labels());
 			View::set_global('labels', $this->labels);
 		}
+
+		// auto booleans
+		if ($this->boolean_fields === NULL)
+		{
+			$this->boolean_fields = $boolean_fields;
+		}
+
 		foreach($this->boolean_fields as $field)
 		{
-			if( ! isset($this->boolean_fields_labels[$field]))
+			if ( ! isset($this->boolean_fields_labels[$field]))
+			{
 				$this->boolean_fields_labels[$field] = $this->boolean_fields_labels['default'];
+			}
 		}
 		
 		$model_classes = ORM_Autogen::get_models();
