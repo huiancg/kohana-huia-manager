@@ -66,17 +66,19 @@ class Huia_Controller_Manager_App extends Controller_App {
 
     if ($this->model_name)
     {
+      $this->model_name = ORM::get_model_name($this->model_name);
       $this->model = ORM::factory($this->model_name, $this->request->param('id'));
 
       if ($this->parent_id)
       {
-        $this->foreign_key = $this->parent . '_id';
+        $this->foreign_key = strtolower($this->parent) . '_id';
 
         if (isset($this->model->{$this->foreign_key}))
         {
           $this->model->where($this->foreign_key, '=', $this->parent_id);
         }
         
+        $this->parent = ORM::get_model_name($this->parent);
         $this->parent_model = ORM::factory($this->parent, $this->parent_id);
       }
 
