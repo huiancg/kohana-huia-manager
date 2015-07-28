@@ -1,4 +1,4 @@
-<h2><?php echo $title ?></h2>
+<h2><?php echo __(Inflector::plural($title)); ?></h2>
 <hr />
 
 <?php echo View::factory($breadcrumb) ?>
@@ -35,8 +35,9 @@
 					<td><?php echo $row->id; ?></td>
 					<?php foreach ($labels as $name => $description) : ?>
 					
-					<td>
 					<?php if (in_array($name, $ignore_fields)) { continue; } ?>
+					
+					<td>
 					
 					<?php if (in_array($name, $upload_fields)) : ?>
 
@@ -65,7 +66,7 @@
 							}
 						}
 						?>
-						<?php echo $row->{$name}->{$column_name}; ?>
+						<a href="<?php echo URL::site('manager/' . $name . '/edit/' . $row->{$name}->id); ?>"><?php echo $row->{$name}->{$column_name}; ?></a>
 					
 					<?php elseif (in_array($name, $boolean_fields)) : ?>
 

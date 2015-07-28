@@ -13,7 +13,7 @@
 			$menu_model = str_replace(array($dir, APPPATH, EXT), '', $path);
 			?>
 			<li>
-				<a href="./manager/<?php echo strtolower($menu_model); ?>" target="_self" class="ng-binding"><?php echo __($menu_model); ?></a>
+				<a href="./manager/<?php echo strtolower($menu_model); ?>" target="_self" class="ng-binding"><?php echo __(Inflector::plural($menu_model)); ?></a>
 			</li>
 			<?php
 		}
