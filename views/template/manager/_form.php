@@ -16,6 +16,22 @@
 
 		<?php echo Form::password($name, NULL, array('class' => 'form-control')) ?>
 
+		<?php elseif (in_array($name, $date_fields)) : ?>
+
+		<?php echo Form::input($name, $model->$name, array('class' => 'form-control')) ?><br />
+
+		<script>
+			<?php 
+			$language = explode('-', I18n::lang());
+			$language = $language[0] . (isset($language[1]) ? '-' . strtoupper($language[1]) : '');
+			?>
+			jQuery('input[name="<?php echo $name ?>"]').datepicker({
+				language: '<?php echo $language; ?>',
+				todayBtn: true,
+				format: 'yyyy-mm-dd'
+			});
+		</script
+
 		<?php elseif (in_array($name, $text_fields)) : ?>
 		
 		<?php echo Form::textarea($name, $model->$name, array('class' => 'form-control')) ?>

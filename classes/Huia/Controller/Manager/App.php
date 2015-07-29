@@ -63,6 +63,8 @@ class Huia_Controller_Manager_App extends Controller_App {
     $boolean_fields = array();
     $image_fields = array();
     $upload_fields = array();
+    $text_fields = array();
+    $date_fields = array();
 
     if ($this->model_name)
     {
@@ -72,15 +74,20 @@ class Huia_Controller_Manager_App extends Controller_App {
       {
         $this->foreign_key = strtolower($this->parent) . '_id';
 
+        $this->parent_model = ORM::factory(ORM::get_model_name($this->parent), $this->parent_id);
+
+        $model_has_many = Inflector::plural(strtolower($this->model_name));
+
         if (isset($this->model->{$this->foreign_key}))
         {
           $this->model->where($this->foreign_key, '=', $this->parent_id);
         }
-
-        $this->parent_model = ORM::factory(ORM::get_model_name($this->parent), $this->parent_id);
+        else if (isset($this->parent_model->{$model_has_many}))
+        {
+          $this->model = $this->parent_model->{$model_has_many};
+        }
       }
 
-      $text_fields = array();
       $this->model->reload_columns(TRUE);
       foreach ($this->model->table_columns() as $column => $values)
       {
@@ -100,8 +107,14 @@ class Huia_Controller_Manager_App extends Controller_App {
         {
           $upload_fields[] = $column;
         }
+        else if (Arr::get($values, 'data_type') === 'date')
+        {
+          $date_fields[] = $column;
+        }
       }
 
+      View::set_global('date_fields', $date_fields);
+      
       View::set_global('text_fields', $text_fields);
 
       $this->belongs_to = Arr::merge($this->belongs_to, $this->model->belongs_to());

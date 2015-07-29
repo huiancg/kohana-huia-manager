@@ -3,6 +3,7 @@
 <head>
 	<title><?php echo isset($title) ? $title . ' - Manager' : 'Manager'; ?></title>       
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
 	<base href="<?php echo Kohana::$base_url; ?>" />
 	<!-- Script -->		
 	<script type="text/javascript">
@@ -14,6 +15,9 @@
 	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<script src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>
+	
+	<script src="//eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="//eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR.js" charset="UTF-8"></script>
 	<script>
 	</script>
 	<script>
