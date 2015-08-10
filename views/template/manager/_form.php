@@ -60,7 +60,7 @@
 		<?php echo Form::file($name, array('class' => 'form-control')) ?>
 		
 		<?php if ($model->$name) : ?>
-			<br /><img src="<?php echo $model->get_url($name); ?>">
+			<br /><img class="img-responsive" src="<?php echo $model->get_url($name); ?>">
 		<?php endif; ?>
 
 		<?php elseif ( ! empty($belongs_to) AND Arr::get($belongs_to, str_replace('_id', '', $name))) : ?>
