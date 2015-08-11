@@ -23,7 +23,7 @@
 					<th style="min-width: 200px;">Ações</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="form-rows" data-model-name="<?php echo $model_name; ?>">
 			<?php if ( ! count($rows)) : ?>
 					<th class="info" colspan="<?php echo (count($model->labels()) + 2); ?>">
 						<center>Sem itens cadastrados</center>
@@ -70,7 +70,15 @@
 					
 					<?php elseif (in_array($name, $boolean_fields)) : ?>
 
-						<?php echo $boolean_fields_labels[$name][$row->$name]; ?>
+						<a href="javascript:;" 
+							 data-id="<?php echo $row->id; ?>" 
+							 data-field="<?php echo $name; ?>" 
+							 data-status="<?php echo $row->$name; ?>" 
+							 data-status-no="<?php echo $boolean_fields_labels[$name][0]; ?>" 
+							 data-status-yes="<?php echo $boolean_fields_labels[$name][1]; ?>" 
+							 class="bool-field btn btn-<?php echo ($row->$name) ? 'success' : 'danger'; ?>">
+							<?php echo $boolean_fields_labels[$name][$row->$name]; ?>
+						</a>
 
 					<?php else : ?>
 					
@@ -89,3 +97,38 @@
 		</table>
 	</div>
 </div>
+
+<script>
+	var $form_rows = $('#form-rows');
+	var model_name = $form_rows.data('model-name');
+	
+	$(document).on('click', '.bool-field', function(e) {
+		e.preventDefault();
+		var $this = $(this);
+		if ($this.data('running')) {
+			return;
+		}
+		$this.data('running', true);
+		var data = {};
+		var actived = ($this.data('status')) ? 0 : 1;
+		data[$this.data('field')] = actived;
+		var url = base_url + 'manager/' + model_name + '/edit/'+ $this.data('id');
+		var btn_class = $this.attr('class');
+		var btn_text = $this.text();
+		$this.attr('class', 'btn').html('<i class="glyphicon glyphicon-refresh">');
+		$.post(url, data, function(r) {
+			if (r.errors) {
+				var message = '';
+				for (var i in r.errors) {
+					message += r.errors[i] + "\n";
+				}
+				alert(message);
+			} else {
+				btn_class = (actived) ? 'btn btn-success' : 'btn btn-danger';
+				btn_text = (actived) ? $this.data('status-yes') : $this.data('status-no');
+			}
+			$this.attr('class', 'bool-field ' + btn_class).text(btn_text);
+			$this.data('running', false);
+		});
+	});
+</script>

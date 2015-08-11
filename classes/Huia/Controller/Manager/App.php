@@ -399,15 +399,21 @@ class Huia_Controller_Manager_App extends Controller_App {
       }
 
 
+      if ($this->request->is_ajax())
+      {
+        $this->response->json($this->model->all_as_array());
+        return;
+      }
+
       Session::instance()->set('success', 'Registro salvo com sucesso!');
 
       if ($this->redirect === NULL)
       {
-        return HTTP::redirect($this->url());
+        HTTP::redirect($this->url());
       }
       else
       {
-        return HTTP::redirect($this->redirect);
+        HTTP::redirect($this->redirect);
       }
     }
     catch (ORM_Validation_Exception $e)
@@ -417,7 +423,13 @@ class Huia_Controller_Manager_App extends Controller_App {
       {
         $errors = array($e->getMessage());
       }
+
       View::set_global('errors', $errors);
+
+      if ($this->request->is_ajax())
+      {
+        $this->response->json(array('errors' => $errors));
+      }
     }
   }
 }
