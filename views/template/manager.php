@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="controller-<?php echo $controller; ?> action-<?php echo $action; ?>">
 <head>
-	<title><?php echo isset($title) ? $title . ' - Manager' : 'Manager'; ?></title>       
+	<title><?php echo isset($title) ? __($title) . ' - Manager' : 'Manager'; ?></title>       
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
 	<base href="<?php echo Kohana::$base_url; ?>" />
