@@ -186,9 +186,11 @@ class Huia_Controller_Manager_App extends Controller_App {
       
       $view = View::factory('template/manager/controller');
       $view->set('class_name', $class_name);
+	  
+	  $file = str_replace('_', DIRECTORY_SEPARATOR, $class_name);
       
       $base = APPPATH.'classes'.DIRECTORY_SEPARATOR.'Controller'.DIRECTORY_SEPARATOR.'Manager'.DIRECTORY_SEPARATOR;
-      $file_name = $base . $class_name . EXT;
+      $file_name = $base . $file . EXT;
       
       create_dir(dirname($file_name));
       
