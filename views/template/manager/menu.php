@@ -1,22 +1,13 @@
 <ul class="nav navbar-nav">
 	<?php
-	/*
-	<li>
-		<a href="./manager/tag" target="_self" class="ng-binding">Social Gifts</a>
-	</li>
-	*/
-	$dir = 'classes'.DIRECTORY_SEPARATOR.'Model'.DIRECTORY_SEPARATOR;
-	foreach ((Kohana::list_files($dir)) as $file => $path)
+	$model_classes = ORM_Autogen::get_models();
+	foreach ($model_classes as $model_class)
 	{
-		if (is_string($path) AND strpos($path, APPPATH) !== FALSE)
-		{
-			$menu_model = str_replace(array($dir, APPPATH, EXT), '', $path);
-			?>
-			<li>
-				<a href="./manager/<?php echo strtolower($menu_model); ?>" target="_self" class="ng-binding"><?php echo __(Inflector::plural($menu_model)); ?></a>
-			</li>
-			<?php
-		}
+		?>
+		<li>
+			<a href="./manager/<?php echo $model_class; ?>" target="_self" class="ng-binding"><?php echo __(Inflector::plural($model_class)); ?></a>
+		</li>
+		<?php
 	}
 	?>
 </ul>
