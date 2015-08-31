@@ -32,10 +32,17 @@
 
 	<nav class="navbar navbar-default ng-scope" role="navigation">
 		<div class="container">
-			<div class="navbar-header">					
-				<a class="navbar-brand " href="<?php echo Kohana::$base_url; ?>manager/">Manager</a>
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <a class="navbar-brand " href="<?php echo Kohana::$base_url; ?>manager/">Manager</a>
 			</div>
-			<div class="collapse navbar-collapse">
+			
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<?php echo View::factory('template/manager/menu'); ?>
 			</div><!--/.nav-collapse -->
 		</div>
