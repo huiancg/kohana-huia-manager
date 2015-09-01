@@ -350,7 +350,16 @@ class Huia_Controller_Manager_App extends Controller_App {
   protected function save()
   {
     $this->model->values($this->request->post());
-
+	
+	// clean null values
+	foreach ($this->model->table_columns() as $field => $values)
+	{
+		if (Arr::get($values, 'is_nullable') AND ! $this->model->{$field})
+		{
+			$this->model->{$field} = NULL;
+		}
+	}
+	
     try
     {
       if (isset($_FILES))         
@@ -399,8 +408,13 @@ class Huia_Controller_Manager_App extends Controller_App {
           $this->model->add($name, $ids);
         }
       }
-
-
+      
+      if (class_exists('Cache'))
+      {
+        // Flush all cache
+        Cache::instance()->delete_all();
+      }
+      
       if ($this->request->is_ajax())
       {
         $this->response->json($this->model->all_as_array());
