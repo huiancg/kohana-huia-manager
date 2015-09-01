@@ -9,9 +9,19 @@ Route::set('manager_parent', 'manager/<parent>/<parent_id>/<controller>(/<action
     'action'     => 'index',
     'directory' => 'manager'
   ));
-
+  
 Route::set('manager', 'manager(/<controller>(/<action>(/<id>)))', array(
     'id' => '\d+'
+  ))
+  ->defaults(array(
+    'controller' => 'user',
+    'action'     => 'index',
+    'directory' => 'manager'
+  ));
+  
+Route::set('manager_childs', 'manager/<parents>/<controller>(/<action>(/<id>))', array(
+    'id' => '\d+',
+    'parents' => '.*',
   ))
   ->defaults(array(
     'controller' => 'user',

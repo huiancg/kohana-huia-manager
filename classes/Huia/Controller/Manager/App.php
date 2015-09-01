@@ -20,6 +20,7 @@ class Huia_Controller_Manager_App extends Controller_App {
   public $labels = array();
 
   public $parent = NULL;
+  public $parents = NULL;
   public $parent_id = NULL;
   public $parent_model = NULL;
   public $parent_controller = NULL;
@@ -51,6 +52,26 @@ class Huia_Controller_Manager_App extends Controller_App {
       $this->title = $this->model_name;
     }
 
+	if ( ! $this->parents)
+	{
+      $this->parents = $this->request->param('parents');
+      $this->parents = explode('/', $this->parents);
+      $parents = array();
+      if (count($this->parents) > 1)
+      {
+        foreach ($this->parents as $index => $value)
+        {
+            if ($index % 2) continue;
+            $parents[] = array(
+              'model' => $value,
+              'table' => Inflector::plural($value),
+              'model_id' => $this->parents[$index + 1]
+            );
+        }
+      }
+      $this->parents = array_reverse($parents);
+    }
+    
     if ( ! $this->parent)
     {
       $this->parent = $this->request->param('parent');
@@ -69,7 +90,19 @@ class Huia_Controller_Manager_App extends Controller_App {
     if ($this->model_name)
     {
       $this->model = ORM::factory(ORM::get_model_name($this->model_name), $this->request->param('id'));
-
+	  
+      if ($this->parents)
+      {
+        $current_parent_table = strtolower($this->model_name);
+        foreach ($this->parents as $index => $values)
+        { 
+          $this->model->join(Arr::get($values, 'table'));
+          $this->model->on(Arr::get($values, 'table').'.id', '=', $current_parent_table.'.'.Arr::get($values, 'model').'_id');
+          
+          $current_parent_table = Arr::get($values, 'table');
+        }
+      }
+      
       if ($this->parent_id)
       {
         $this->foreign_key = strtolower($this->parent) . '_id';
