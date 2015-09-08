@@ -18,6 +18,7 @@ function render_menu($items, $parent = NULL)
         $html .= __(Inflector::plural($item)) .' <span class="caret"></span>';
       $html .= '</a>';
       $html .= '<ul class="dropdown-menu">';
+        $html .= '<li><a href="./manager/'.strtolower($item).'">'.__(Inflector::plural($item)).'</a></li>';
         $html .= render_menu($matches, $item);
       $html .= '</ul></li>';
       
