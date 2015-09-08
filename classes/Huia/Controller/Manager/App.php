@@ -111,11 +111,11 @@ class Huia_Controller_Manager_App extends Controller_App {
 
         $model_has_many = Inflector::plural(strtolower($this->model_name));
 
-        if (isset($this->model->{$this->foreign_key}))
+        if (in_array($this->foreign_key, array_keys($this->model->as_array())))
         {
           $this->model->where($this->foreign_key, '=', $this->parent_id);
         }
-        else if (isset($this->parent_model->{$model_has_many}))
+        else if (in_array($model_has_many, array_keys($this->parent_model->as_array())))
         {
           $this->model = $this->parent_model->{$model_has_many};
         }
