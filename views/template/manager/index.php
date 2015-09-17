@@ -126,6 +126,7 @@
 			} else {
 				btn_class = (actived) ? 'btn btn-success' : 'btn btn-danger';
 				btn_text = (actived) ? $this.data('status-yes') : $this.data('status-no');
+				$this.data('status', actived);
 			}
 			$this.attr('class', 'bool-field ' + btn_class).text(btn_text);
 			$this.data('running', false);
