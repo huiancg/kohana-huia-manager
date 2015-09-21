@@ -21,7 +21,8 @@ Route::set('manager', 'manager(/<controller>(/<action>(/<id>)))', array(
   
 Route::set('manager_childs', 'manager/<parents>/<controller>(/<action>(/<id>))', array(
     'id' => '\d+',
-    'parents' => '.*',
+    'parents' => '(?:(?!(index|edit|new)).)+',
+    'controller' => '(?:(?!(index|edit|new)).)+',
   ))
   ->defaults(array(
     'controller' => 'user',

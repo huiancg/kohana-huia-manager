@@ -52,8 +52,8 @@ class Huia_Controller_Manager_App extends Controller_App {
       $this->title = $this->model_name;
     }
 
-	if ( ! $this->parents)
-	{
+    if ( ! $this->parents)
+    {
       $this->parents = $this->request->param('parents');
       $this->parents = explode('/', $this->parents);
       $parents = array();
@@ -95,10 +95,11 @@ class Huia_Controller_Manager_App extends Controller_App {
       {
         $current_parent_table = strtolower($this->model_name);
         foreach ($this->parents as $index => $values)
-        { 
+        {
           $this->model->join(Arr::get($values, 'table'));
           $this->model->on(Arr::get($values, 'table').'.id', '=', $current_parent_table.'.'.Arr::get($values, 'model').'_id');
-          
+          $this->model->where(Arr::get($values, 'table').'.id', '=', Arr::get($values, 'model_id'));
+
           $current_parent_table = Arr::get($values, 'table');
         }
       }
@@ -277,8 +278,19 @@ class Huia_Controller_Manager_App extends Controller_App {
     {
       $parent = '/' . $this->parent . '/' . $this->parent_id;
     }
+    else if ($this->parents)
+    {
+      $parent = '/';
+      $parents = array_reverse($this->parents);
+      foreach ($parents as $values)
+      {
+        $parent .= Arr::get($values, 'model') . '/' . Arr::get($values, 'model_id') . '/';
+      }
+      $parent = preg_replace('@/$@', '', $parent);
+    }
 
-    return Kohana::$base_url . strtolower($this->request->directory() . $parent . '/' . $this->model_name);
+    $url = Kohana::$base_url . strtolower($this->request->directory() . $parent . '/' . $this->model_name);
+    return $url;
   }
 
   protected function view_dir()
