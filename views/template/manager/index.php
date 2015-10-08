@@ -58,7 +58,17 @@
 						
 						<?php
 						$column_name = NULL;
-						foreach ($row->{$name}->list_columns() as $column => $values)
+
+						$is_model = method_exists($row->{$name}, 'list_columns');
+						$belongs_to_model = $row->{$name};
+						if ( ! $is_model)
+						{
+							$belongs_to_model = Model_App::factory(ORM::get_model_name($row->object_name()), $row->{$name});
+						}
+
+						$name = $belongs_to_model->object_name();
+
+						foreach ($belongs_to_model->list_columns() as $column => $values)
 						{
 							if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
 							{
@@ -66,7 +76,7 @@
 							}
 						}
 						?>
-						<a href="<?php echo URL::site('manager/' . $name . '/edit/' . $row->{$name}->id); ?>"><?php echo $row->{$name}->{$column_name}; ?></a>
+						<a href="<?php echo URL::site('manager/' . $name . '/edit/' . $belongs_to_model->id); ?>"><?php echo $belongs_to_model->{$column_name}; ?></a>
 					
 					<?php elseif (in_array($name, $boolean_fields)) : ?>
 

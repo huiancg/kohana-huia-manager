@@ -67,7 +67,12 @@
 		
 		<?php
 		$column_name = NULL;
-		$parent_belongs = Model_App::factory(ORM::get_model_name($name));
+		$model_name = ORM::get_model_name($name);
+		if ( ! class_exists($model_name))
+		{
+			$model_name = Arr::path($model->belongs_to(), $name.'.model');
+		}
+		$parent_belongs = Model_App::factory($model_name);
 		foreach ($parent_belongs->list_columns() as $column => $values)
 		{
 			if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
@@ -76,8 +81,9 @@
 			}
 		}
 		$belongs_to_values = Arr::merge(array('' => 'Selecione'), $parent_belongs->find_all()->as_array('id', $column_name));
+		$select_name = Arr::path($model->belongs_to(), $name.'.foreign_key');
 		?>
-		<?php echo Form::select($name.'_id', $belongs_to_values, $model->$name, array('class' => 'form-control')) ?>
+		<?php echo Form::select($select_name, $belongs_to_values, $model->{$select_name}, array('class' => 'form-control')) ?>
 		
 		<?php elseif ( ! empty($has_many) AND Arr::get($has_many, $name) AND Arr::path($has_many, $name.'.through')) : ?>
 

@@ -165,6 +165,11 @@ class Huia_Controller_Manager_App extends Controller_App {
         {
           unset($model_labels[$key]);
         }
+        // Ignorar relacionaos
+        if (preg_match('/^id_/', $key))
+        {
+          unset($model_labels[$key]);
+        }
       }
       
       $this->labels = Arr::merge($this->labels, $model_labels);
@@ -396,14 +401,14 @@ class Huia_Controller_Manager_App extends Controller_App {
   {
     $this->model->values($this->request->post());
 	
-	// clean null values
-	foreach ($this->model->table_columns() as $field => $values)
-	{
-		if (Arr::get($values, 'is_nullable') AND ! $this->model->{$field})
-		{
-			$this->model->{$field} = NULL;
-		}
-	}
+    // clean null values
+    foreach ($this->model->table_columns() as $field => $values)
+    {
+      if (Arr::get($values, 'is_nullable') AND ! $this->model->{$field})
+      {
+        $this->model->{$field} = NULL;
+      }
+    }
 	
     try
     {
