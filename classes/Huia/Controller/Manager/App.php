@@ -161,11 +161,18 @@ class Huia_Controller_Manager_App extends Controller_App {
       foreach ($model_labels as $key => $value)
       {
         // ignore through secundary
-        if (Arr::get($this->has_many, $key) AND preg_match('/^'.$key.'_/', Arr::get($this->has_many[$key], 'through')))
+        $has_many_key = Arr::get($this->has_many, $key);
+        if ($has_many_key)
         {
-          unset($model_labels[$key]);
+          $through = Arr::get($has_many_key, 'through');
+          $is_secundary = preg_match('/^'.$key.'_/', $through);
+          $same_table = $through === ($key . '_' . $key);
+          if ($is_secundary AND ! $same_table)
+          {
+            unset($model_labels[$key]);
+          }
         }
-        // Ignorar relacionaos
+        // ignore composite
         if (preg_match('/^id_/', $key))
         {
           unset($model_labels[$key]);

@@ -89,8 +89,8 @@
 
 		<?php
 		$column_name = NULL;
-		$parent_belongs = Model_App::factory(ORM::get_model_name($name));
-		foreach ($parent_belongs->list_columns() as $column => $values)
+		$parent_has_many = Model_App::factory(ORM::get_model_name($name));
+		foreach ($parent_has_many->list_columns() as $column => $values)
 		{
 			if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
 			{
