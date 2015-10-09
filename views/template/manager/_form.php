@@ -115,7 +115,21 @@
 			}
 		}
 
-		echo Form::select($name.'[]', $parent_has_many->find_all()->as_array('id', $column_name), $model->$name->find_all()->as_array(NULL, $far_primary_key), array('class' => 'form-control', 'multiple' => 'multiple')) ?>
+		$selects = $parent_has_many->find_all()->as_array('id', $column_name);
+		$selected = $model->$name->find_all()->as_array(NULL, $far_primary_key);
+
+		echo '<div style="max-height: 400px; overflow-x: auto; border: 1px solid #ddd; border-radius: 3px; padding: 0 10px;">';
+		foreach ($selects as $select_id => $select_name)
+		{
+			echo '<div class="checkbox">';
+				echo '<label class="checkbox-inline">';
+					echo Form::checkbox($name.'[]', $select_id, in_array($select_id, $selected)) . ' ' . $select_name . ' ';
+				echo '</label>';
+			echo '</div>';
+		}
+		echo '</div>';
+
+		// echo Form::select($name.'[]', , , array('class' => 'form-control', 'multiple' => 'multiple')) ?>
 		
 		<?php elseif (in_array($name, $boolean_fields)) : ?>			
 			<div class="radio form-control">				

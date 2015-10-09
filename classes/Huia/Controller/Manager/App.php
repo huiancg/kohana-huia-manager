@@ -457,12 +457,13 @@ class Huia_Controller_Manager_App extends Controller_App {
         {
           $ids = $this->request->post($name);
 
+          $this->model->remove($name);
+
           if ( ! $ids)
           {
             continue;
           }
           
-          $this->model->remove($name);
           $this->model->add($name, $ids);
         }
       }
