@@ -152,10 +152,8 @@ class Huia_Controller_Manager_App extends Controller_App {
       View::set_global('text_fields', $text_fields);
 
       $this->belongs_to = Arr::merge($this->belongs_to, $this->model->belongs_to());
-      View::set_global('belongs_to', $this->belongs_to);
       
       $this->has_many = Arr::merge($this->has_many, $this->model->has_many());
-      View::set_global('has_many', $this->has_many);
       
       $model_labels = $this->model->labels();
       foreach ($model_labels as $key => $value)
@@ -180,7 +178,6 @@ class Huia_Controller_Manager_App extends Controller_App {
       }
       
       $this->labels = Arr::merge($this->labels, $model_labels);
-      View::set_global('labels', $this->labels);
     }
 
     // auto upload
@@ -253,6 +250,10 @@ class Huia_Controller_Manager_App extends Controller_App {
     
     View::set_global('title', $this->title);
 
+    View::set_global('belongs_to', $this->belongs_to);
+    View::set_global('has_many', $this->has_many);
+    
+    View::set_global('labels', $this->labels);
     View::set_global('model_name', $this->model_name);
     View::set_global('image_fields', $this->image_fields);
     View::set_global('upload_fields', $this->upload_fields);

@@ -5,6 +5,7 @@
 
 <form method="post" enctype="multipart/form-data">
 	<?php foreach ($labels as $name => $description) : ?>
+
 	<?php if (in_array($name, $ignore_fields)) { continue; } ?>
 	
 	<?php if ($parent AND $parent === $name) { continue; } ?>
@@ -67,12 +68,16 @@
 		
 		<?php
 		$column_name = NULL;
+		
 		$model_name = ORM::get_model_name($name);
+		
 		if ( ! class_exists($model_name))
 		{
-			$model_name = Arr::path($model->belongs_to(), $name.'.model');
+			$model_name = Arr::path($belongs_to, $name.'.model');
 		}
+
 		$parent_belongs = Model_App::factory($model_name);
+
 		foreach ($parent_belongs->list_columns() as $column => $values)
 		{
 			if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
@@ -80,6 +85,7 @@
 				$column_name = $column;
 			}
 		}
+
 		$belongs_to_values = Arr::merge(array('' => 'Selecione'), $parent_belongs->find_all()->as_array('id', $column_name));
 		$select_name = Arr::path($model->belongs_to(), $name.'.foreign_key');
 		?>
@@ -89,7 +95,18 @@
 
 		<?php
 		$column_name = NULL;
-		$parent_has_many = Model_App::factory(ORM::get_model_name($name));
+
+		$model_name = ORM::get_model_name($name);
+
+		$far_primary_key = Arr::path($has_many, $name . '.far_primary_key', 'id');
+		
+		if ( ! class_exists($model_name))
+		{
+			$model_name = Arr::path($has_many, $name.'.model');
+		}
+
+		$parent_has_many = Model_App::factory($model_name);
+		
 		foreach ($parent_has_many->list_columns() as $column => $values)
 		{
 			if (Arr::get($values, 'type') === 'string' AND $column_name === NULL)
@@ -97,7 +114,8 @@
 				$column_name = $column;
 			}
 		}
-		echo Form::select($name.'[]', Model_App::factory(ORM::get_model_name($name))->find_all()->as_array('id', $column_name), $model->$name->find_all()->as_array('id'), array('class' => 'form-control', 'multiple' => 'multiple')) ?>
+
+		echo Form::select($name.'[]', $parent_has_many->find_all()->as_array('id', $column_name), $model->$name->find_all()->as_array(NULL, $far_primary_key), array('class' => 'form-control', 'multiple' => 'multiple')) ?>
 		
 		<?php elseif (in_array($name, $boolean_fields)) : ?>			
 			<div class="radio form-control">				
