@@ -108,6 +108,12 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="col-md-12">
+	  <?php echo $pagination->render(); ?>
+	</div>
+</div>
+
 <script>
 	var $form_rows = $('#form-rows');
 	var model_name = $form_rows.data('model-name');

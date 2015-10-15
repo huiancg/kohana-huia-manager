@@ -375,17 +375,61 @@ class Huia_Controller_Manager_App extends Controller_App {
     {
       foreach($filters as $key => $value)
       {
-        if($value)
-          $this->model->where($key, '=', $value);
+        if ($value)
+        {
+          $this->model->where($key, 'LIKE', '%' . $value . '%');
+        }
       }
     }
 
+    $query = $this->request->query('q');
+    if($query)
+    {
+      $has_fields = FALSE;
+      $object = $this->model->object();
+      foreach($this->labels as $key => $value)
+      {
+        if (in_array($key, $this->ignore_fields))
+        {
+          continue;
+        }
+        
+        if (array_key_exists($key, $object))
+        {
+          if ( ! $has_fields)
+          {
+            $this->model->where_open();
+            $has_fields = TRUE;
+          }
+          $this->model->or_where($key, 'LIKE', '%' . $query . '%');
+        }
+      }
+      if ($has_fields)
+      {
+        $this->model->where_close();
+      }
+    }
+    
+    $this->pagination();
+    
     View::set_global('rows', $this->model->find_all());
 
     if ( ! $this->view_exists())
     {
       $this->content = View::factory('template/manager/index');
     }
+  }
+  
+  public function pagination()
+  {
+    $pagination_model = clone $this->model;
+    $pagination_config = array(
+      'total_items' => $pagination_model->count_all()
+    );
+    $pagination = Pagination::factory($pagination_config);
+    $this->model->offset($pagination->offset);
+    $this->model->limit($pagination->items_per_page);
+    View::set_global('pagination', $pagination);
   }
 
   public function action_new()
@@ -430,11 +474,7 @@ class Huia_Controller_Manager_App extends Controller_App {
             $filename = preg_replace('/\s+/u', '_', $filename);
             $dir = DOCROOT.'public'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.strtolower($this->model_name);
 
-            if ( ! is_dir($dir))
-            {
-              mkdir($dir, 0755, TRUE);
-              chmod($dir, 0755);
-            }
+            create_dir($dir);
 
             Upload::save($file, $filename, $dir);
             $this->model->$name = $filename;
