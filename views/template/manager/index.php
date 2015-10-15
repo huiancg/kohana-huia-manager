@@ -4,8 +4,17 @@
 <?php echo View::factory($breadcrumb) ?>
 
 <div class="row">
-	<div class="col-md-12">
-	  <a href="<?php echo $url; ?>/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Novo</a>
+	<div class="col-md-8">
+	  <a href="<?php echo $url; ?>/new" class="btn btn-success">Novo <span class="glyphicon glyphicon-plus"></span></a>
+	  <a href="<?php echo $url . '?' . http_build_query(Request::current()->query()) . '&_export=1'; ?>" class="btn btn-default">Exportar <span class="glyphicon glyphicon-download"></span></a>
+	</div>
+	<div class="col-md-4">
+	  <form class="form">
+      <fieldset>
+        <?php echo Form::input('q', Request::current()->query('q'), array('class' => 'col-md-8')); ?>
+        <?php echo Form::button('', 'Buscar', array('class' => 'col-md-4')); ?>
+      </fieldset>
+    </form>
 	</div>
 </div>
 
