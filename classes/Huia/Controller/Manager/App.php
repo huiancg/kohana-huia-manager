@@ -429,7 +429,6 @@ class Huia_Controller_Manager_App extends Controller_App {
 
   public function export_data()
   {
-    $this->model->all_as_array();
     $rows = array();
     foreach ($this->model->find_all() as $row)
     {
