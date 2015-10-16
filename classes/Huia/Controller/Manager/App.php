@@ -412,15 +412,7 @@ class Huia_Controller_Manager_App extends Controller_App {
 
     if ($this->request->query('_export'))
     {
-      $rows = $this->model->all_as_array();
-      $rows = array();
-      foreach ($this->model->find_all() as $row)
-      {
-        $rows[] = $row->as_array();
-      }
-      $this->response->body($this->array2csv($rows));
-      $this->response->send_file(TRUE, $this->model_name . '.' . time() . '.csv');
-      return;
+      return $this->export();
     }
     
     $this->pagination();
@@ -431,6 +423,24 @@ class Huia_Controller_Manager_App extends Controller_App {
     {
       $this->content = View::factory('template/manager/index');
     }
+  }
+
+  public function export_data()
+  {
+    $this->model->all_as_array();
+    $rows = array();
+    foreach ($this->model->find_all() as $row)
+    {
+      $rows[] = $row->as_array();
+    }
+    return $rows;
+  }
+
+  public function export()
+  {
+    $rows = $this->export_data();
+    $this->response->body($this->array2csv($rows));
+    $this->response->send_file(TRUE, $this->model_name . '.' . time() . '.csv');
   }
 
   public function array2csv(array $array)
