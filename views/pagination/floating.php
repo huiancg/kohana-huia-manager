@@ -55,40 +55,44 @@ for ($i = $n7; $i <= $n8; $i++)
 }
 
 ?>
-<p class="pagination">
+
+
+<nav>
+  <ul class="pagination">
 
   <?php if ($first_page !== FALSE): ?>
-    <a href="<?php echo HTML::chars($page->url($first_page)) ?>" rel="first" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward"></span></a>
+    <li><a href="<?php echo HTML::chars($page->url($first_page)) ?>" rel="first" class="btn btn-default"><span class="glyphicon glyphicon-fast-backward"></span></a></li>
 	<?php else: ?>
-    <span class="btn"><span class="glyphicon glyphicon-fast-backward"></span></span>
+    <li class="disabled"><span class="btn"><span class="glyphicon glyphicon-fast-backward"></span></span></li>
 	<?php endif ?>
 
 	<?php if ($previous_page !== FALSE): ?>
-    <a href="<?php echo HTML::chars($page->url($previous_page)) ?>" rel="first" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></a>
+    <li><a href="<?php echo HTML::chars($page->url($previous_page)) ?>" rel="first" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></a></li>
 	<?php else: ?>
-    <span class="btn"><span class="glyphicon glyphicon-backward"></span></span>
+    <li class="disabled"><span class="btn"><span class="glyphicon glyphicon-backward"></span></span></li>
 	<?php endif ?>
 
 	<?php foreach ($links as $number => $content): ?>
 
 		<?php if ($number === $current_page): ?>
-			<span class="btn btn-primary"><?php echo $content ?></span>
+			<li class="disabled"><span class="btn btn-primary"><?php echo $content ?></span></li>
 		<?php else: ?>
-			<a href="<?php echo HTML::chars($page->url($number)) ?>" class="btn btn-default"><?php echo $content ?></a>
+			<li><a href="<?php echo HTML::chars($page->url($number)) ?>" class="btn btn-default"><?php echo $content ?></a></li>
 		<?php endif ?>
 
 	<?php endforeach ?>
 
 	<?php if ($next_page !== FALSE): ?>
-    <a href="<?php echo HTML::chars($page->url($next_page)) ?>" rel="first" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></a>
+    <li><a href="<?php echo HTML::chars($page->url($next_page)) ?>" rel="first" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></a></li>
 	<?php else: ?>
-    <span class="btn"><span class="glyphicon glyphicon-forward"></span></span>
+    <li class="disabled"><span class="btn"><span class="glyphicon glyphicon-forward"></span></span></li>
 	<?php endif ?>
 
 	<?php if ($last_page !== FALSE): ?>
-    <a href="<?php echo HTML::chars($page->url($last_page)) ?>" rel="first" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a>
+    <li><a href="<?php echo HTML::chars($page->url($last_page)) ?>" rel="first" class="btn btn-default"><span class="glyphicon glyphicon-fast-forward"></span></a></li>
 	<?php else: ?>
-    <span class="btn"><span class="glyphicon glyphicon-fast-forward"></span></span>
+    <li class="disabled"><span class="btn"><span class="glyphicon glyphicon-fast-forward"></span></span></li>
 	<?php endif ?>
 
-</p><!-- .pagination -->
+  </ul>
+</nav>
