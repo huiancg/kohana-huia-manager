@@ -13,6 +13,7 @@ class Huia_Controller_Manager_App extends Controller_App {
   public $boolean_fields_labels = array('default' => array('Não', 'Sim'));
   public $ignore_actions = array();
   public $ignore_fields = array();
+  public $can_export = TRUE;
   public $actions = array();
 
   public $belongs_to = array();
@@ -266,6 +267,7 @@ class Huia_Controller_Manager_App extends Controller_App {
     View::set_global('breadcrumbs', $this->breadcrumbs);
     View::set_global('actions', $this->actions);
     View::set_global('ignore_fields', $this->ignore_fields);
+    View::set_global('can_export', $this->can_export);
 
     if ($this->parent)
     {
