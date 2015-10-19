@@ -6,6 +6,15 @@ function render_menu($items, $parent = NULL)
   $ignored = array();
   foreach ($items as $item)
   {
+    $controller_name = 'Controller_Manager_'.$item;
+    if (class_exists($controller_name))
+    {
+      $reflector = new ReflectionClass($controller_name);
+      if ($reflector->isAbstract())
+      {
+        continue;
+      }
+    }
     if (in_array($item, $ignored))
     {
       continue;
