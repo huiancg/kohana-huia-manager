@@ -49,6 +49,10 @@ class Huia_Controller_Manager_App extends Controller_App {
     {
       return TRUE;
     }
+    else if ( ! Auth::instance()->logged_in('admin'))
+    {
+      return FALSE;
+    }
 
     $can = FALSE;
 
@@ -61,7 +65,7 @@ class Huia_Controller_Manager_App extends Controller_App {
     $require_controller = 'manager-' . strtolower($this->request->controller());
 
     // can readonly
-    if ($type === self::CAN_READ AND $this->can_check($require_controller . '-view'))
+    if ($type === self::CAN_READ AND $this->can_check($require_controller . '-' . $this->request->action()))
     {
       $can = 'can readonly';
     }
@@ -78,12 +82,7 @@ class Huia_Controller_Manager_App extends Controller_App {
       return FALSE;
     }
 
-    if ($can)
-    {
-      return TRUE;
-    }
-
-    return Auth::instance()->logged_in('admin');
+    return $can;
   }
 
   public function role_exists($name)

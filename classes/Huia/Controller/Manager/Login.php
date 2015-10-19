@@ -41,13 +41,12 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
       }
       
       $model = ORM::factory('User')->find_by_email($user->email);
-      $user->password = $password;
       
       if ( ! $model->loaded())
       {
         $model->values((array) $user);
-
-        $model->create();
+        $model->password = $password;
+        $model = $model->create();
 
         $roles = array(
           $this->get_role('admin', 'Administrative user, has access to everything.'),
@@ -56,12 +55,13 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
 
         $model->add('roles', $roles);
       }
-      else
+      else if (Auth::instance()->hash($password) !== $model->password)
       {
+        $model->password = $password;
         $model->update();
       }
 
-      Auth::instance()->force_login($model);
+      Auth::instance()->force_login($model->username);
       
       return TRUE; 
     }
@@ -78,9 +78,10 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
       $username = $this->request->post('username');
       $password = $this->request->post('password');
       
-      $success = Auth::instance()->login($username, $password) OR $this->huia_auth($username, $password);
+      $local_login = Auth::instance()->login($username, $password);
+      $huia_login = $this->huia_auth($username, $password);
       
-      if ($success AND Auth::instance()->logged_in('admin'))
+      if ($local_login OR $huia_login)
       {
         return HTTP::redirect('manager');
       }
