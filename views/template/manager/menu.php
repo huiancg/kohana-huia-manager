@@ -15,6 +15,7 @@ function render_menu($items, $parent = NULL)
         continue;
       }
     }
+
     if (in_array($item, $ignored))
     {
       continue;
@@ -27,7 +28,10 @@ function render_menu($items, $parent = NULL)
         $html .= __(Inflector::plural($item)) .' <span class="caret"></span>';
       $html .= '</a>';
       $html .= '<ul class="dropdown-menu">';
-        $html .= '<li><a href="./manager/'.strtolower($item).'">'.__(Inflector::plural($item)).'</a></li>';
+        if (Can::show($item, 'index'))
+        {
+          $html .= '<li><a href="./manager/'.strtolower($item).'">'.__(Inflector::plural($item)).'</a></li>';
+        }
         $html .= render_menu($matches, $item);
       $html .= '</ul></li>';
       
@@ -35,6 +39,11 @@ function render_menu($items, $parent = NULL)
     }
     else
     {
+      if ( ! Can::show($item, 'index'))
+      {
+        continue;
+      }
+
       $prepend = '';
       if ($parent)
       {
