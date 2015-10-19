@@ -60,9 +60,10 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
       {
         $model->update();
       }
+
+      Auth::instance()->force_login($model);
       
-      return Auth::instance()->login($username, $password);
-      
+      return TRUE; 
     }
     catch (Exception $e)
     {
@@ -78,7 +79,7 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
       $password = $this->request->post('password');
       
       $success = Auth::instance()->login($username, $password) OR $this->huia_auth($username, $password);
-
+      
       if ($success AND Auth::instance()->logged_in('admin'))
       {
         return HTTP::redirect('manager');

@@ -2,6 +2,9 @@
 
 class Huia_Controller_Manager_App extends Controller_App {
 
+  const CAN_READ = 'read';
+  const CAN_WRITE = 'write';
+
   public $template = 'manager';
 
   public $title = NULL;
@@ -20,6 +23,8 @@ class Huia_Controller_Manager_App extends Controller_App {
   public $has_many = array();
   public $labels = array();
 
+  public $is_public = FALSE;
+
   public $parent = NULL;
   public $parents = NULL;
   public $parent_id = NULL;
@@ -33,9 +38,62 @@ class Huia_Controller_Manager_App extends Controller_App {
 
   public $breadcrumbs = array();
 
+  public function can_check($required)
+  {
+    return ! $this->role_exists($required) OR Auth::instance()->logged_in($required);
+  }
+
+  public function can($type)
+  {
+    if ($this->request->controller() === 'Login' OR $this->is_public)
+    {
+      return TRUE;
+    }
+
+    $can = FALSE;
+
+    // is manager
+    if ($this->role_exists('manager') AND Auth::instance()->logged_in('manager'))
+    {
+      $can = 'is manager';
+    }
+
+    $require_controller = 'manager-' . strtolower($this->request->controller());
+
+    // can readonly
+    if ($type === self::CAN_READ AND $this->can_check($require_controller . '-view'))
+    {
+      $can = 'can readonly';
+    }
+
+    // can write/read
+    if ($this->can_check($require_controller))
+    {
+      $can = 'can write/read';
+    }
+
+    // role exists for controller
+    if ($this->role_exists($require_controller))
+    {
+      return FALSE;
+    }
+
+    if ($can)
+    {
+      return TRUE;
+    }
+
+    return Auth::instance()->logged_in('admin');
+  }
+
+  public function role_exists($name)
+  {
+    return (bool) Model_Role::factory('Role', array('name' => $name))->id;
+  }
+
   public function before()
   {
-    if($this->request->controller() != 'Login' && !Auth::instance()->logged_in('admin'))
+    if ( ! $this->can(self::CAN_READ))
     {
       return HTTP::redirect('manager/login');
     }
@@ -492,6 +550,11 @@ class Huia_Controller_Manager_App extends Controller_App {
 
   protected function save()
   {
+    if ( ! $this->can('write'))
+    {
+      return HTTP::redirect('manager/login');
+    }
+
     $this->model->values($this->request->post());
 	
     // clean null values
