@@ -484,11 +484,21 @@ class Huia_Controller_Manager_App extends Controller_App {
   {
     $this->show_form();
   }
+  
+  public function flush()
+  {
+    if (class_exists('Cache'))
+    {
+      // Flush all cache
+      Cache::instance()->delete_all();
+    }
+  }
 
   public function action_delete()
   {
     $this->model->delete();
     Session::instance()->set('success', 'Registro removido com sucesso!');
+    $this->flush();
     return HTTP::redirect('manager/'.strtolower($this->model_name));
   }
 
@@ -551,11 +561,7 @@ class Huia_Controller_Manager_App extends Controller_App {
         }
       }
       
-      if (class_exists('Cache'))
-      {
-        // Flush all cache
-        Cache::instance()->delete_all();
-      }
+      $this->flush();
       
       if ($this->request->is_ajax())
       {
