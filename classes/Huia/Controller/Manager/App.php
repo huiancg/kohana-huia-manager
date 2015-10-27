@@ -442,25 +442,38 @@ class Huia_Controller_Manager_App extends Controller_App {
   public function export()
   {
     $rows = $this->export_data();
-    $this->response->body($this->array2csv($rows));
-    $this->response->send_file(TRUE, $this->model_name . '.' . time() . '.csv');
+    $this->response->body($this->array2table($rows));
+    $this->response->send_file(TRUE, $this->model_name . '.' . time() . '.xls');
   }
 
-  public function array2csv(array $array)
+  public function array2table(array $array)
   {
     if ( ! count($array))
     {
       return NULL;
     }
-    ob_start();
-    $df = fopen('php://output', 'w');
-    fputcsv($df, array_keys(reset($array)));
-    foreach ($array as $row)
+    $html = '<table>';
+    
+    $head = array_keys(reset($array));
+    $html .= '<tr>';
+    foreach ($head as $row)
     {
-      fputcsv($df, $row);
+      $html .= '<td>' . __($row) . '</td>';
     }
-    fclose($df);
-    return ob_get_clean();
+    $html .= '</tr>';
+    
+    foreach ($array as $rows)
+    {
+      $html .= '<tr>';
+      foreach ($rows as $row)
+      {
+        $html .= '<td>'.$row.'</td>';
+      }
+      $html .= '<tr>';
+    }
+    $html .= '</table>';
+    
+    return $html;
   }
   
   public function pagination()
