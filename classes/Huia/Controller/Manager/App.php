@@ -4,6 +4,7 @@ class Huia_Controller_Manager_App extends Controller_App {
 
   public $template = 'manager';
 
+  public $bootstrap_css = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css';
   public $title = NULL;
   public $model_name = NULL;
   public $model = NULL;
@@ -270,6 +271,7 @@ class Huia_Controller_Manager_App extends Controller_App {
     View::set_global('actions', $this->actions);
     View::set_global('ignore_fields', $this->ignore_fields);
     View::set_global('can_export', $this->can_export);
+    View::set_global('bootstrap_css', $this->bootstrap_css);
 
     if ($this->parent)
     {
