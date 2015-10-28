@@ -63,7 +63,10 @@
 		</div>
 		<?php } ?>
 		<?php echo $content ?>
+		
+		<?php echo View::factory('template/manager/footer')->render(); ?>
 	</section>
+
 	<?php echo View::factory($scripts); ?>
 </body>
 </html>
