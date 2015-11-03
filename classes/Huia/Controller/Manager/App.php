@@ -525,13 +525,14 @@ class Huia_Controller_Manager_App extends Controller_App {
     foreach ($this->model->table_columns() as $field => $values)
     {
       $is_boolean = Arr::get($values, 'data_type') === 'tinyint' AND Arr::get($values, 'display') == 1;
-      $is_nullable = Arr::get($values, 'is_nullable') AND ! $this->model->{$field};
-      if ($is_nullable AND ! $is_boolean)
+      $is_nullable = Arr::get($values, 'is_nullable');
+      $has_value = (bool) $this->model->{$field} AND $this->model->{$field} !== NULL;
+      if ($is_nullable AND ! $is_boolean AND ! $has_value)
       {
         $this->model->{$field} = NULL;
       }
     }
-	
+
     try
     {
       if (isset($_FILES))         
