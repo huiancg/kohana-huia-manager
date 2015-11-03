@@ -524,7 +524,9 @@ class Huia_Controller_Manager_App extends Controller_App {
     // clean null values
     foreach ($this->model->table_columns() as $field => $values)
     {
-      if (Arr::get($values, 'is_nullable') AND ! $this->model->{$field})
+      $is_boolean = Arr::get($values, 'data_type') === 'tinyint' AND Arr::get($values, 'display') == 1;
+      $is_nullable = Arr::get($values, 'is_nullable') AND ! $this->model->{$field};
+      if ($is_nullable AND ! $is_boolean)
       {
         $this->model->{$field} = NULL;
       }
