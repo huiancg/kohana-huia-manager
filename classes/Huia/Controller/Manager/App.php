@@ -383,7 +383,7 @@ class Huia_Controller_Manager_App extends Controller_App {
       {
         if ($value)
         {
-          $this->model->where($key, 'LIKE', '%' . $value . '%');
+          $this->model->where($key, '=', $value);
         }
       }
     }
