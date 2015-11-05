@@ -40,6 +40,11 @@ class Huia_Controller_Manager_App extends Controller_App {
   {
     if ( ! Can::show())
     {
+      // Record only when invalid session, prevent ximite.
+      if ( ! Auth::instance()->logged_in())
+      {
+        Session::instance()->set('manager_login_reference', URL::current());
+      }
       return HTTP::redirect('manager/login');
     }
 

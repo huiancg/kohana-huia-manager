@@ -83,7 +83,9 @@ class Huia_Controller_Manager_Login extends Controller_Manager_App {
       
       if ($local_login OR $huia_login)
       {
-        return HTTP::redirect('manager');
+        $redirect = Session::instance()->get_once('manager_login_reference');
+        $redirect = ($redirect) ? $redirect : 'manager';
+        return HTTP::redirect($redirect);
       }
       else
       {
