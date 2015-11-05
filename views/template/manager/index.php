@@ -110,7 +110,9 @@
 
           <?php endforeach; ?> 
 
-          <?php echo View::factory($form_actions, $row->as_array()); ?>
+          <?php $rows_data = $row->as_array(); ?>
+          <?php $rows_data['_row'] = $row; ?>
+          <?php echo View::factory($form_actions, $rows_data); ?>
 
         </tr>
       <?php endforeach; ?>
