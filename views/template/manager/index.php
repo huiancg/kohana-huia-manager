@@ -98,7 +98,7 @@
                data-status-no="<?php echo $boolean_fields_labels[$name][0]; ?>" 
                data-status-yes="<?php echo $boolean_fields_labels[$name][1]; ?>" 
                class="bool-field btn btn-<?php echo ($row->$name) ? 'success' : 'danger'; ?>">
-              <?php echo $boolean_fields_labels[$name][$row->$name]; ?>
+              <?php echo Arr::path($boolean_fields_labels, $name.'.'.((int)$row->$name)); ?>
             </a>
 
           <?php else : ?>
