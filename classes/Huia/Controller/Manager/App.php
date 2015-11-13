@@ -7,7 +7,12 @@ class Huia_Controller_Manager_App extends Controller_App {
   public $bootstrap_css = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css';
   public $title = NULL;
   public $model_name = NULL;
+  
+  /**
+   * @var Model_App 
+   */
   public $model = NULL;
+  
   public $image_fields = NULL;
   public $upload_fields = NULL;
   public $boolean_fields = NULL;
@@ -503,6 +508,30 @@ class Huia_Controller_Manager_App extends Controller_App {
   public function action_edit()
   {
     $this->show_form();
+  }
+  
+  public function action_save_draft()
+  {
+    if ($this->request->method() !== Request::POST)
+    {
+      return;
+    }
+    
+    $this->model->set_composite_draft_actived();
+
+    $this->response->json(TRUE);
+  }
+
+  public function action_delete_draft()
+  {
+    if ($this->request->method() !== Request::POST)
+    {
+      return;
+    }
+    
+    $this->model->clean_draft();
+
+    $this->response->json(TRUE);
   }
   
   public function flush()
