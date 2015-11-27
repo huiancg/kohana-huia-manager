@@ -20,6 +20,7 @@ class Huia_Controller_Manager_App extends Controller_App {
   public $ignore_actions = array();
   public $ignore_fields = array();
   public $can_export = TRUE;
+  public $can_search = TRUE;
   public $actions = array();
 
   public $belongs_to = array();
@@ -281,6 +282,7 @@ class Huia_Controller_Manager_App extends Controller_App {
     View::set_global('actions', $this->actions);
     View::set_global('ignore_fields', $this->ignore_fields);
     View::set_global('can_export', $this->can_export);
+    View::set_global('can_search', $this->can_search);
     View::set_global('bootstrap_css', $this->bootstrap_css);
 
     if ($this->parent)
@@ -393,7 +395,7 @@ class Huia_Controller_Manager_App extends Controller_App {
       {
         if ($value)
         {
-          $this->model->where($key, '=', $value);
+          $this->model->where($key, 'LIKE', '%' . $value . '%');
         }
       }
     }

@@ -11,12 +11,14 @@
     <?php endif; ?>
   </div>
   <div class="col-md-4">
+    <?php if (isset($can_search) AND $can_search) : ?>
     <form class="form">
       <fieldset>
         <?php echo Form::input('q', Request::current()->query('q'), array('class' => 'col-md-8')); ?>
         <?php echo Form::button('', 'Buscar', array('class' => 'col-md-4')); ?>
       </fieldset>
     </form>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -98,7 +100,7 @@
                data-status-no="<?php echo $boolean_fields_labels[$name][0]; ?>" 
                data-status-yes="<?php echo $boolean_fields_labels[$name][1]; ?>" 
                class="bool-field btn btn-<?php echo ($row->$name) ? 'success' : 'danger'; ?>">
-              <?php echo Arr::path($boolean_fields_labels, $name.'.'.((int)$row->$name)); ?>
+              <?php echo $boolean_fields_labels[$name][$row->$name]; ?>
             </a>
 
           <?php else : ?>
@@ -110,9 +112,7 @@
 
           <?php endforeach; ?> 
 
-          <?php $rows_data = $row->as_array(); ?>
-          <?php $rows_data['_row'] = $row; ?>
-          <?php echo View::factory($form_actions, $rows_data); ?>
+          <?php echo View::factory($form_actions, $row->as_array()); ?>
 
         </tr>
       <?php endforeach; ?>
