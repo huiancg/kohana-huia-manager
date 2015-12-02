@@ -399,33 +399,11 @@ class Huia_Controller_Manager_App extends Controller_App {
         }
       }
     }
-
+    
     $query = $this->request->query('q');
     if($query)
     {
-      $has_fields = FALSE;
-      $object = $this->model->object();
-      foreach($this->labels as $key => $value)
-      {
-        if (in_array($key, $this->ignore_fields))
-        {
-          continue;
-        }
-        
-        if (array_key_exists($key, $object))
-        {
-          if ( ! $has_fields)
-          {
-            $this->model->where_open();
-            $has_fields = TRUE;
-          }
-          $this->model->or_where($key, 'LIKE', '%' . $query . '%');
-        }
-      }
-      if ($has_fields)
-      {
-        $this->model->where_close();
-      }
+      $this->search($query);
     }
 
     if ($this->request->query('_export'))
@@ -440,6 +418,33 @@ class Huia_Controller_Manager_App extends Controller_App {
     if ( ! $this->view_exists())
     {
       $this->content = View::factory('template/manager/index');
+    }
+  }
+  
+  public function search($query)
+  {
+    $has_fields = FALSE;
+    $object = $this->model->object();
+    foreach($this->labels as $key => $value)
+    {
+      if (in_array($key, $this->ignore_fields))
+      {
+        continue;
+      }
+      
+      if (array_key_exists($key, $object))
+      {
+        if ( ! $has_fields)
+        {
+          $this->model->where_open();
+          $has_fields = TRUE;
+        }
+        $this->model->or_where($key, 'LIKE', '%' . $query . '%');
+      }
+    }
+    if ($has_fields)
+    {
+      $this->model->where_close();
     }
   }
 
