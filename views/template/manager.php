@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="controller-<?php echo $controller; ?> action-<?php echo $action; ?>">
+<html class="huia-manager controller-<?php echo $controller; ?> action-<?php echo $action; ?>">
 <head>
 	<title><?php echo isset($title) ? __($title) . ' - Manager' : 'Manager'; ?></title>       
 	<link rel="stylesheet" href="<?php echo $bootstrap_css; ?>">
