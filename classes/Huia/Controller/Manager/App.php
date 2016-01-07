@@ -558,6 +558,16 @@ class Huia_Controller_Manager_App extends Controller_App {
     return HTTP::redirect('manager/'.strtolower($this->model_name));
   }
 
+  protected function save_after()
+  {
+    //
+  }
+
+  protected function save_before()
+  {
+    //
+  }
+
   protected function save()
   {
     $this->model->values($this->request->post());
@@ -599,7 +609,11 @@ class Huia_Controller_Manager_App extends Controller_App {
         $this->model->{$this->parent.'_id'} = $this->parent_id;
       }
 
+      $this->save_before();
+
       $this->model->save();
+
+      $this->save_after();
       
       // add has many
       foreach ($this->has_many as $name => $values)
