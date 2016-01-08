@@ -12,12 +12,7 @@
   </div>
   <div class="col-md-4">
     <?php if (isset($can_search) AND $can_search) : ?>
-    <form class="form">
-      <fieldset>
-        <?php echo Form::input('q', Request::current()->query('q'), array('class' => 'col-md-8')); ?>
-        <?php echo Form::button('', 'Buscar', array('class' => 'col-md-4')); ?>
-      </fieldset>
-    </form>
+      <?php echo View::factory($search_view); ?>
     <?php endif; ?>
   </div>
 </div>

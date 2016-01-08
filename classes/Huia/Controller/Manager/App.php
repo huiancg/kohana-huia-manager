@@ -277,6 +277,7 @@ class Huia_Controller_Manager_App extends Controller_App {
     View::set_global('ignore_actions', $this->ignore_actions);
     View::set_global('form_actions', $this->form_actions());
     View::set_global('breadcrumb', $this->breadcrumb());
+    View::set_global('search_view', $this->search_view());
     View::set_global('scripts', $this->scripts());
     View::set_global('breadcrumbs', $this->breadcrumbs);
     View::set_global('actions', $this->actions);
@@ -351,6 +352,15 @@ class Huia_Controller_Manager_App extends Controller_App {
       return $this->view_dir().'/_breadcrumb';
     }
     return 'template/manager/_breadcrumb';
+  }
+
+  protected function search_view()
+  {
+    if ($this->view_exists('_search'))
+    {
+      return $this->view_dir().'/_search';
+    }
+    return 'template/manager/_search';
   }
 
   protected function scripts()
