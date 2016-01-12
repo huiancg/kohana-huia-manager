@@ -1,7 +1,8 @@
 {
-  "name": "huia/kohana-huia-manager",
+  "name": "huiancg/kohana-huia-manager",
   "type": "kohana-module",
   "require": {
+    "huiancg/kohana-huia": "~2.2",
     "composer/installers": "~1.0",
     "kohana/core": ">=3.3",
     "php": ">=5.3.3"
