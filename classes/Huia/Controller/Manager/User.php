@@ -14,4 +14,12 @@ class Huia_Controller_Manager_User extends Controller_Manager_App {
     return parent::action_index();
   }
 
+  protected function save_before()
+  {
+    if ($this->request->post('password') === '')
+    {
+      $this->model->password = NULL;  
+    }
+  }
+
 }
