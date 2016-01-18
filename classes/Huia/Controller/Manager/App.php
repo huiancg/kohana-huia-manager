@@ -498,7 +498,7 @@ class Huia_Controller_Manager_App extends Controller_App {
       {
         $html .= '<td>'.$row.'</td>';
       }
-      $html .= '<tr>';
+      $html .= '</tr>';
     }
     $html .= '</table>';
     
