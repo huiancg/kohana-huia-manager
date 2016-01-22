@@ -18,7 +18,9 @@ class Huia_Controller_Manager_User extends Controller_Manager_App {
   {
     if ($this->request->post('password') === '')
     {
-      $this->model->password = NULL;  
+      $values = $this->request->post();
+      unset($values['password']);
+      $this->request->post($values);
     }
   }
 
