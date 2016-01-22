@@ -14,7 +14,7 @@ class Huia_Controller_Manager_User extends Controller_Manager_App {
     return parent::action_index();
   }
 
-  protected function save_before()
+  protected function save()
   {
     if ($this->request->post('password') === '')
     {
@@ -22,6 +22,7 @@ class Huia_Controller_Manager_User extends Controller_Manager_App {
       unset($values['password']);
       $this->request->post($values);
     }
+    parent::save();
   }
 
 }
