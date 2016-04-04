@@ -33,7 +33,7 @@
 			});
 		</script
 
-		<?php elseif (in_array($name, $text_fields)) : ?>
+		<?php elseif (isset($text_fields[$name])) : ?>
 		
 		<?php echo Form::textarea($name, $model->$name, array('class' => 'form-control')) ?>
 
