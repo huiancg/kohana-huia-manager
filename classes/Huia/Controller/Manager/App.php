@@ -160,7 +160,7 @@ class Huia_Controller_Manager_App extends Controller_App {
         {
           $image_fields[] = $column;
         }
-        else if (preg_match('/^(file|upload)_/', $column))
+        else if (preg_match('/^(file|upload)/', $column))
         {
           $upload_fields[] = $column;
         }
