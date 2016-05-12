@@ -3,7 +3,7 @@
 <head>
 	<title><?php echo isset($title) ? __($title) . ' - Manager' : 'Manager'; ?></title>       
 	<link rel="stylesheet" href="<?php echo $bootstrap_css; ?>">
-	<link rel="stylesheet" href="//eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker3.min.css">
 	<base href="<?php echo Kohana::$base_url; ?>" />
 	<!-- Script -->		
 	<script type="text/javascript">
@@ -16,8 +16,8 @@
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<script src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>
 	
-	<script src="//eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script src="//eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/locales/bootstrap-datepicker.pt-BR.js" charset="UTF-8"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/locales/bootstrap-datepicker.pt-BR.min.js" charset="UTF-8"></script>
 	<script>
 	</script>
 	<script>
