@@ -535,30 +535,6 @@ class Huia_Controller_Manager_App extends Controller_App {
     $this->show_form();
   }
   
-  public function action_save_draft()
-  {
-    if ($this->request->method() !== Request::POST)
-    {
-      return;
-    }
-    
-    $this->model->set_composite_draft_actived();
-
-    $this->response->json(TRUE);
-  }
-
-  public function action_delete_draft()
-  {
-    if ($this->request->method() !== Request::POST)
-    {
-      return;
-    }
-    
-    $this->model->clean_draft();
-
-    $this->response->json(TRUE);
-  }
-  
   public function flush()
   {
     if (class_exists('Cache'))
