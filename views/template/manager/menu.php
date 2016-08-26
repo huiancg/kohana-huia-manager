@@ -66,7 +66,7 @@ function render_menu($items, $parent = NULL)
 ?>
 <ul class="nav navbar-nav">
 	<?php
-	$model_classes = ORM_Autogen::get_models();
+	$model_classes = ORM::get_models();
   sort($model_classes);
 	echo render_menu($model_classes);
 	?>
