@@ -626,6 +626,8 @@ class Huia_Controller_Manager_App extends Controller_App {
       {
         $this->model->{$this->parent.'_id'} = $this->parent_id;
       }
+      
+      $this->has_many = Arr::merge($this->has_many, $this->model->has_many());
 
       $this->save_before();
 
