@@ -69,7 +69,15 @@ function render_menu($items, $parent = NULL)
 	$model_classes = ORM::get_models();
   sort($model_classes);
 	echo render_menu($model_classes);
-	?>
+	
+  if (Kohana::$config->load('huia/manager.schema') AND Can::show('schema', 'index')) :
+  ?>
+  <li>
+    <a href="./manager/schema"><?php echo __('Schema editor'); ?></a>
+  </li>
+  <?php
+  endif;
+  ?>
 </ul>
 <ul class="nav navbar-nav navbar-right">
 	<li>

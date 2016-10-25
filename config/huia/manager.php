@@ -2,4 +2,5 @@
 
 return array(
   'auth_url' => NULL,
+  'schema' => Kohana::$environment !== Kohana::PRODUCTION,
 );
