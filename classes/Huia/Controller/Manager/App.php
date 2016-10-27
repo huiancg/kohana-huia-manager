@@ -19,6 +19,7 @@ class Huia_Controller_Manager_App extends Controller_App {
   public $boolean_fields_labels = array('default' => array('Não', 'Sim'));
   public $ignore_actions = array();
   public $ignore_fields = array();
+  public $text_field_formats = array();
   public $can_export = TRUE;
   public $can_search = TRUE;
   public $actions = array();
@@ -137,12 +138,19 @@ class Huia_Controller_Manager_App extends Controller_App {
         }
       }
 
+      $text_field_formats = Kohana::$config->load('huia/model.models');
+
+      if($text_field_formats)
+        $this->text_field_formats = Arr::merge($this->text_field_formats, $text_field_formats);
+
       $this->model->reload_columns(TRUE);
       foreach ($this->model->table_columns() as $column => $values)
       {
         if (Arr::get($values, 'data_type') === 'text')
         {
-          $text_fields[] = $column;   
+          $format = Arr::path($this->text_field_formats, $this->model->object_name() . '.' . $column, 'ckeditor');
+
+          $text_fields[$column] = array('format' => $format);
         }
         else if (Arr::get($values, 'data_type') === 'tinyint' AND Arr::get($values, 'display') == 1)
         {
@@ -152,7 +160,7 @@ class Huia_Controller_Manager_App extends Controller_App {
         {
           $image_fields[] = $column;
         }
-        else if (preg_match('/^(file|upload)_/', $column))
+        else if (preg_match('/^(file|upload)/', $column))
         {
           $upload_fields[] = $column;
         }
@@ -618,6 +626,8 @@ class Huia_Controller_Manager_App extends Controller_App {
       {
         $this->model->{$this->parent.'_id'} = $this->parent_id;
       }
+      
+      $this->has_many = Arr::merge($this->has_many, $this->model->has_many());
 
       $this->save_before();
 
