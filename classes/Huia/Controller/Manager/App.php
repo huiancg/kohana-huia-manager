@@ -624,24 +624,25 @@ class Huia_Controller_Manager_App extends Controller_App {
       $this->model->save();
 
       $this->save_after();
+
+      // ignore external relations
+      $has_many_through = array_filter($this->has_many, function($item) {
+        return (strpos(Arr::get($item, 'through'), $this->model->table_name().'_') === 0);
+      });
       
       // add has many
-      foreach ($this->has_many as $name => $values)
+      foreach ($has_many_through as $name => $values)
       {
-        // through
-        if (Arr::get($values, 'through'))
+        $ids = $this->request->post($name);
+
+        $this->model->remove($name);
+
+        if ( ! $ids)
         {
-          $ids = $this->request->post($name);
-
-          $this->model->remove($name);
-
-          if ( ! $ids)
-          {
-            continue;
-          }
-          
-          $this->model->add($name, $ids);
+          continue;
         }
+        
+        $this->model->add($name, $ids);
       }
       
       $this->flush();
