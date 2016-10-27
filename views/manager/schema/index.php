@@ -42,7 +42,7 @@
 				<a class="btn btn-sm btn-primary" href="manager/schema/edit/0?model=<?php echo $model['model']; ?>">
 					<span class="glyphicon glyphicon-edit"></span> <?php echo __('Edit'); ?>
 				</a>
-				<a class="btn btn-sm btn-danger btn-delete" href="manager/schema/delete/0?model=<?php echo $model['model']; ?>">
+				<a class="btn btn-sm btn-danger delete-table" data-table_name="<?php echo $model['table_name']; ?>" href="#">
 					<span class="glyphicon glyphicon-trash"></span>  <?php echo __('Delete'); ?>
 				</a>
 			</td>
@@ -143,7 +143,7 @@
 
 		var $this = $(this);
 		
-		$.post(base_url + 'manager/schema/delete_table', $this.data()).then(function(data) {
+		$.post(base_url + 'manager/schema/delete_relation', $this.data()).then(function(data) {
 			console.info(data);
 			if (data && data.executed) {
 				refresh(data.token);
@@ -236,5 +236,25 @@
 				running = false;
 	  	});
 	  });
-	})
+	});
+
+	$('.delete-table').off('click').on('click', function(e) {
+		e.preventDefault();
+
+		// confirm
+		if ( ! confirm('<?php echo __('Are you sure?'); ?>'))
+		{
+			return;
+		}
+
+		$.post(base_url + 'manager/schema/delete_table', {table_name: $(this).data('table_name')}).then(function(data) {
+			
+			if (data && data.token) {
+				refresh(data.token);
+			} else {
+				alert('Erro');
+			}
+
+		});
+	});
 </script>

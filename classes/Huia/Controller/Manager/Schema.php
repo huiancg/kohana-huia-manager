@@ -268,7 +268,7 @@ class Huia_Controller_Manager_Schema extends Controller_Manager_App {
     $this->response->json($data);
   }
 
-  public function action_delete_table()
+  public function action_delete_relation()
   {
     $data = Arr::extract($this->request->post(), ['type', 'table_name', 'foreign_key']);
     
@@ -362,6 +362,14 @@ class Huia_Controller_Manager_Schema extends Controller_Manager_App {
     }
 
     $this->response->json($data);
+  }
+
+  public function action_delete_table()
+  {
+    $query = 'DROP TABLE `' . $this->request->post('table_name') . '`;';
+    DB::query(NULL, $query)->execute();
+    
+    $this->response->json(['token' => Security::token()]);
   }
 
 }
