@@ -3,4 +3,5 @@
 return array(
   'auth_url' => NULL,
   'schema' => Kohana::$environment !== Kohana::PRODUCTION,
+  'schema_ignored_models' => ['Log', 'Role'],
 );

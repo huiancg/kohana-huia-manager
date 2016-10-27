@@ -9,7 +9,7 @@
   <li><a href="<?php echo $link; ?>"><?php echo __($name); ?></a></li>
   <?php endforeach; ?>
 
-  <?php if ($model->id) : ?>
+  <?php if (isset($model) AND isset($model->id) AND $model->id) : ?>
   <li><a href="<?php echo $url; ?>/index"><?php echo __(Inflector::plural($title)); ?></a></li>
   <li class="active"><?php echo ($model->id) ? 'Editar' : 'Criar' ?></li>
   <?php else : ?>

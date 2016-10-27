@@ -1,21 +1,29 @@
 <h2><?php echo $title; ?></h2>
 <hr />
 <table class="table">
+	
 	<thead>
 		<tr>
 			<th><?php echo __('Model'); ?></td>
 			<th><?php echo __('Belongs To'); ?></th>
 			<th><?php echo __('Through'); ?></th>
+			<th><?php echo __('Action'); ?></th>
 		</tr>
 	</thead>
+	
 	<tbody>
 		<?php foreach ($models as $model) : ?>
 		<tr>
-			<th><?php echo $model['model']; ?></th>
+			<th>
+				<?php foreach ($model['parents'] as $parent) : ?>
+					<span class="badge"><?php echo $parent; ?></span> 
+				<?php endforeach; ?>
+				<?php echo $model['name']; ?>
+			</th>
 			<td>
 				<?php foreach ($model['belongs_to'] as $item) : ?>
 					<a href="#" class="btn btn-sm btn-warning delete-relation" data-type="belongs_to" data-table_name="<?php echo $model['table_name'] ?>" data-foreign_key="<?php echo $item['foreign_key'] ?>">
-						<?php echo $item['model']; ?> <i class="glyphicon glyphicon-trash"></i>
+						<?php echo $item['name']; ?> <i class="glyphicon glyphicon-trash"></i>
 					</a>
 				<?php endforeach; ?>
 				
@@ -30,9 +38,29 @@
 				
 				<a href="#" data-toggle="modal" data-target="#modal-relation" class="btn btn-sm btn-success" data-type="through" data-table_name="<?php echo $model['table_name']; ?>"><i class="glyphicon glyphicon-plus"></i></a>
 			</td>
+			<td>
+				<a class="btn btn-sm btn-primary" href="manager/schema/edit/0?model=<?php echo $model['model']; ?>">
+					<span class="glyphicon glyphicon-edit"></span> <?php echo __('Edit'); ?>
+				</a>
+				<a class="btn btn-sm btn-danger btn-delete" href="manager/schema/delete/0?model=<?php echo $model['model']; ?>">
+					<span class="glyphicon glyphicon-trash"></span>  <?php echo __('Delete'); ?>
+				</a>
+			</td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>
+
+	<tfoot>
+		<tr>
+			<td colspan="4">
+				<div class="form-group">
+					<div class="btn-group btn-group-justified" role="group" aria-label="...">
+						<a href="#" class="btn btn-info" data-toggle="modal" data-target="#modal-new-table"><i class="glyphicon glyphicon-plus"></i> <?php echo __('Add'); ?></a>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</tfoot>
 </table>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="modal-relation">
@@ -67,7 +95,43 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-new-table">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="model" class="control-label">Table:</label>
+            <input type="text" class="form-control" id="modal-table_name">
+            <p class="text-info">
+            	<?php echo __('Use plural lowcase names in english without special characters.'); ?>
+            </p>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo __('Close'); ?></button>
+        <button type="button" class="btn btn-primary" id="modal-new-table-save"><?php echo __('Save'); ?></button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <script type="text/javascript">
+
+	var refresh = function(token, reload) {
+		$.post(base_url + 'manager/schema', {token: token}).then(function() {
+			if (reload === undefined || reload) {
+				window.location.reload();
+			}
+		});
+	}
+
 	$('a.delete-relation').click(function(e) {
 		e.preventDefault();
 		
@@ -82,10 +146,43 @@
 		$.post(base_url + 'manager/schema/delete_table', $this.data()).then(function(data) {
 			console.info(data);
 			if (data && data.executed) {
-				window.location.reload();
+				refresh(data.token);
 			} else {
 				alert('Erro');
 			}
+		});
+	});
+
+	$('#modal-new-table').on('show.bs.modal', function (event) {
+		$('#modal-new-table-save').off('click').on('click', function(e) {
+			e.preventDefault();
+
+			var table_name = $('#modal-table_name');
+			var isValidName = (new RegExp("^[a-z_]+s$")).test(table_name.val());
+			var modal = $(this);
+
+			if (modal.data('running')) {
+				return;
+			}
+			modal.data('running', true);
+
+			if ( ! table_name.val() || ! isValidName) {
+	  		table_name.focus();
+	  		modal.data('running', false);
+	  		return;
+	  	}
+
+	  	var data = {
+	  		table_name: table_name.val()
+	  	};
+
+	  	$.post(base_url + 'manager/schema/create_table', data).then(function(data) {
+	  		modal.modal('hide');
+	  		
+	  		refresh(data.token);
+
+	  		modal.data('running', false);
+	  	});
 		});
 	});
 
@@ -133,9 +230,10 @@
 	  	};
 
 	  	$.post(base_url + 'manager/schema/upset_table', data).then(function(data) {
-	  		// modal.modal('hide');
-	  		console.info(data);
-	  		// window.location.reload();
+	  		modal.modal('hide');
+	  		
+	  		refresh(data.token);
+				running = false;
 	  	});
 	  });
 	})
