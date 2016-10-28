@@ -115,6 +115,8 @@ class Huia_Controller_Manager_Schema extends Controller_Manager_App {
 
     $relations = array_keys($this->has_many) + array_keys($this->belongs_to);
 
+    $table_columns = $this->model->table_columns();
+    
     foreach ($this->labels as $field => $label)
     {
       if (in_array($field, $relations))
@@ -136,6 +138,7 @@ class Huia_Controller_Manager_Schema extends Controller_Manager_App {
 
       $fields[] = [
         'field' => $field,
+        'required' => !!! Arr::path($table_columns, $field.'.is_nullable', FALSE),
         'label' => $label,
         'type' => $this->get_field_type($field),
         'attributes' => $attributes,
@@ -247,13 +250,15 @@ class Huia_Controller_Manager_Schema extends Controller_Manager_App {
 
   public function action_alter_table()
   {
-    $data = Arr::extract($this->request->post(), ['table_name', 'name', 'type', 'last']);
+    $data = Arr::extract($this->request->post(), ['table_name', 'name', 'type', 'required', 'last']);
 
     $data['name'] = str_replace('-', '_', URL::slug($data['name']));
 
     $data['datatype'] = $this->get_data_type($data['type']);
 
-    $data['query'] = 'ALTER TABLE `'.$data['table_name'].'` ADD COLUMN `'.$data['name'].'` '.$data['datatype'].' NULL AFTER `'.$data['last'].'`;';
+    $not_null = ($data['required'] === 'true') ? 'NOT NULL' : 'NULL';
+
+    $data['query'] = 'ALTER TABLE `'.$data['table_name'].'` ADD COLUMN `'.$data['name'].'` '.$data['datatype'].' '.$not_null.' AFTER `'.$data['last'].'`;';
 
     try
     {
@@ -331,13 +336,15 @@ class Huia_Controller_Manager_Schema extends Controller_Manager_App {
 
   public function action_update_field()
   {
-    $data = Arr::extract($this->request->post(), ['table_name', 'from', 'to', 'type']);
+    $data = Arr::extract($this->request->post(), ['table_name', 'from', 'to', 'type', 'required']);
 
     $data['to'] = str_replace('-', '_', URL::slug($data['to']));
 
     $data['type'] = $this->get_data_type($data['type']);
+
+    $not_null = ($data['required'] === 'true') ? 'NOT NULL' : 'NULL';
     
-    $query = 'ALTER TABLE `'.$data['table_name'].'` CHANGE `'.$data['from'].'` `'.$data['to'].'` '.$data['type'].';';
+    $query = 'ALTER TABLE `'.$data['table_name'].'` CHANGE `'.$data['from'].'` `'.$data['to'].'` '.$data['type'].' '.$not_null.';';
     
     DB::query(NULL, $query)->execute();
     $data['query'] = $query;
