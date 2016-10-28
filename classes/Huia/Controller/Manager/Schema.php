@@ -223,6 +223,28 @@ class Huia_Controller_Manager_Schema extends Controller_Manager_App {
     }
   }
 
+  public function action_rename_table()
+  {
+    $data = Arr::extract($this->request->post(), ['table_name', 'table_name_to']);
+
+    $data['table_name_to'] = str_replace('-', '_', URL::slug($data['table_name_to']));
+
+    $data['query'] = "RENAME TABLE `{$data["table_name"]}` TO `{$data["table_name_to"]}`;";
+
+    try
+    {
+      DB::query(NULL, $data['query'])->execute();
+    }
+    catch (Database_Exception $e)
+    {
+      $data['error'] = $e->getMessage();
+    }
+
+    $data['token'] = Security::token();
+
+    $this->response->json($data);
+  }
+
   public function action_alter_table()
   {
     $data = Arr::extract($this->request->post(), ['table_name', 'name', 'type', 'last']);
