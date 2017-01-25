@@ -468,10 +468,33 @@ class Huia_Controller_Manager_App extends Controller_App {
 
   public function export_data()
   {
-    $rows = array();
+    $fields = array();
+
+    foreach ($this->belongs_to as $key => $value) 
+    {
+      foreach (ORM::factory($value['model'])->table_columns() as $field => $values)
+      {
+        if(Arr::get($values, 'data_type') === 'varchar')
+        {
+          $fields[$key] = $field;
+          break;
+        }
+      }
+    }
+
+    $rows = [];
+
     foreach ($this->model->find_all() as $row)
     {
-      $rows[] = $row->as_array();
+      $item = $row->as_array();
+      foreach ($fields as $key => $value)
+      {
+        // remove o id
+        unset($item[$key.'_id']);
+        // diz que o belongs tem o primeiro varchar
+        $item[$key] = $row->{$key}->{$value};
+      }
+      $rows[] = $item;
     }
     return $rows;
   }
